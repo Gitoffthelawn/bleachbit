@@ -48,6 +48,8 @@ class InitTestCase(common.BleachbitTestCase):
         # should be expanded
         if os.name == 'nt':
             test_inputs = ('~', r'~\ntuser.dat')
+        elif os.uname().sysname == 'Darwin':
+            test_inputs = ('~', '~/.bashrc')
         elif os.name == 'posix':
             test_inputs = ('~', '~/.profile')
         for test_input in test_inputs:

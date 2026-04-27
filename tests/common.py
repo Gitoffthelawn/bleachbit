@@ -157,7 +157,7 @@ class BleachbitTestCase(unittest.TestCase):
         if lang_id in ('C', 'C.UTF-8', 'C.utf8', 'POSIX'):
             return
         self.assertTrue(len(lang_id) >= 2)
-        pattern = r'^[a-z]{2,3}([_-][A-Z][A-Za-z]{1,3})?(@\w+)?(\.[a-zA-Z][a-zA-Z0-9-]+)?$'
+        pattern = r'^[a-z]{2,3}([_-][A-Z][A-Za-z]{1,3})?(@\w+)?(\.[a-zA-Z][a-zA-Z0-9-]+)?(@\w+)?$'
         self.assertTrue(re.match(pattern, lang_id),
                         f'Invalid language code format: {lang_id}')
 
@@ -310,6 +310,11 @@ def skipIfWindows(f):
     return unittest.skipIf('win32' == sys.platform, 'running on Windows')(f)
 
 
+def skipUnlessLinux(f):
+    """Skip unit test if not running on Linux"""
+    return unittest.skipUnless(sys.platform.startswith('linux'), 'not running on Linux')(f)
+
+
 def skipUnlessDestructive(f):
     """Skip unless destructive tests are allowed"""
     return unittest.skipUnless(os.getenv('DESTRUCTIVE_TESTS') == 'T', 'environment variable DESTRUCTIVE_TESTS not set to T')(f)
@@ -420,6 +425,16 @@ SPECIAL_TEST_STRINGS = [
     "עִבְרִית.bak",
     'ɡælɪk.bak'
 ]
+
+# macOS (APFS/HFS+) rejects filenames containing lone UTF-16 surrogates
+# (\ud800-\udfff), raising OSError with errno 92 (EILSEQ). Filter them out
+# on darwin so the surrogate-related test cases run only where the
+# filesystem supports them.
+if sys.platform == 'darwin':
+    SPECIAL_TEST_STRINGS = [
+        s for s in SPECIAL_TEST_STRINGS
+        if not any(0xD800 <= ord(ch) <= 0xDFFF for ch in s)
+    ]
 
 # Additional strings for POSIX systems.
 # Windows doesn't allow or requires special handling for these characters.

@@ -50,6 +50,7 @@ class CommonTestCase(common.BleachbitTestCase):
             'nb_NO.ISO-8859-1',
             'POSIX',
             'ru_RU.KOI8-R',
+            'sr_RS.UTF-8@latin', # seen on macOS
             'zh_Hant',
         ]
 
@@ -81,7 +82,7 @@ class CommonTestCase(common.BleachbitTestCase):
         locale_dirs = list(set([locale_dir, '/usr/share/locale']))
         lang_codes = []
         # Skip directories that are not valid language codes
-        skip_dirs = {'l10n'}
+        skip_dirs = {'l10n', 'UTF-8'}
         for locale_dir in locale_dirs:
             if not os.path.isdir(locale_dir):
                 continue
