@@ -24,6 +24,8 @@ Test case for module Options
 
 import errno
 import os
+import stat
+import subprocess
 from unittest import mock
 
 from tests import common

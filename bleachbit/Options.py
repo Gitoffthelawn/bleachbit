@@ -431,8 +431,12 @@ class Options:
             for section in self.config.sections():
                 self.config.remove_section(section)
         try:
-            self.config.read(bleachbit.options_file, encoding='utf-8-sig')
-        except:
+            with open(bleachbit.options_file, 'r', encoding='utf-8-sig', errors='surrogateescape') as _file:
+                self.config.read_file(_file, bleachbit.options_file)
+        except FileNotFoundError:
+            logger.debug("Configuration file does not exist yet: %s",
+                         bleachbit.options_file)
+        except Exception:
             logger.exception("Error reading application's configuration")
         if not self.config.has_section("bleachbit"):
             self.config.add_section("bleachbit")
