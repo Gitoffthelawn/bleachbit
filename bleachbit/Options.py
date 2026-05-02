@@ -117,7 +117,7 @@ def init_configuration(*, log=True):
         if log:
             logger.debug('Deleting configuration: %s', bleachbit.options_file)
         os.remove(bleachbit.options_file)
-    with open(bleachbit.options_file, 'w', encoding='utf-8-sig') as f_ini:
+    with open(bleachbit.options_file, 'w', encoding='utf-8-sig', errors='surrogateescape') as f_ini:
         f_ini.write('[bleachbit]\n')
         if os.name == 'nt' and bleachbit.portable_mode:
             f_ini.write('[Portable]\n')
@@ -203,7 +203,7 @@ class Options:
             if not os.path.exists(bleachbit.options_dir):
                 General.makedirs(bleachbit.options_dir)
             mkfile = not os.path.exists(bleachbit.options_file)
-            with open(bleachbit.options_file, 'w', encoding='utf-8-sig') as _file:
+            with open(bleachbit.options_file, 'w', encoding='utf-8-sig', errors='surrogateescape') as _file:
                 self.config.write(_file)
             if mkfile and General.sudo_mode():
                 General.chownself(bleachbit.options_file)
