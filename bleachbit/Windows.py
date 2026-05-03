@@ -1,22 +1,8 @@
-# vim: ts=4:sw=4:expandtab
-
-# BleachBit
-# Copyright (C) 2008-2025 Andrew Ziem
-# https://www.bleachbit.org
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2008-2026 Andrew Ziem.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+# This work is licensed under the terms of the GNU GPL, version 3 or
+# later.  See the COPYING file in the top-level directory.
 
 r"""
 Functionality specific to Microsoft Windows
@@ -38,6 +24,7 @@ These are the terms:
 """
 
 # standard imports
+import atexit
 import base64
 import ctypes
 import decimal
@@ -61,7 +48,7 @@ from uuid import UUID
 
 # first party imports
 import bleachbit
-from bleachbit import FileUtilities
+from bleachbit import FileUtilities, IS_WINDOWS
 from bleachbit.Language import get_text as _
 
 if 'win32' == sys.platform:
@@ -100,6 +87,10 @@ IO_REPARSE_TAG_MOUNT_POINT = 0xA0000003
 FILE_ATTRIBUTE_REPARSE_POINT = 0x400
 
 SPLASH_ICON_SIZE_PX = 256  # 256x256 pixels
+
+_delete_parent_lock_admin = None
+_delete_parent_lock_handle = None
+_delete_parent_lock_key = None
 
 
 class _POINT(ctypes.Structure):
@@ -238,6 +229,161 @@ def csidl_to_environ(varname, csidl):
     set_environ(varname, sppath)
 
 
+def _delete_parent_lock_needed(pathname):
+    """
+    Check if a parent directory lock is needed.
+
+    This is only needed on Windows for administrator users
+    when the path is not in the user's profile directory.
+    """
+    if os.name != 'nt':
+        return False
+    global _delete_parent_lock_admin
+    if _delete_parent_lock_admin is None:
+        try:
+            _delete_parent_lock_admin = shell.IsUserAnAdmin()
+        except Exception:
+            logger.exception('error checking whether current user is an administrator')
+            _delete_parent_lock_admin = True
+    return _delete_parent_lock_admin and not _path_in_user_profile(pathname)
+
+
+def _path_for_comparison(pathname):
+    """
+    Normalize a path for comparison.
+    """
+    return os.path.normcase(os.path.abspath(
+        FileUtilities.extended_path_undo(pathname)))
+
+
+def _path_in_user_profile(pathname):
+    """
+    Check if a path is within the user's profile directory.
+    """
+    userprofile = os.environ.get('USERPROFILE')
+    if not userprofile:
+        return False
+    try:
+        profile_path = _path_for_comparison(userprofile)
+        compare_path = _path_for_comparison(pathname)
+        return os.path.commonpath((profile_path, compare_path)) == profile_path
+    except (OSError, ValueError):
+        return False
+
+
+def _delete_parent_directory(pathname):
+    """
+    Get the parent directory of a file or directory.
+    """
+    path = os.path.abspath(FileUtilities.extended_path_undo(pathname))
+    return FileUtilities.extended_path(os.path.dirname(path))
+
+
+def _close_delete_parent_lock():
+    """Close the parent lock handle."""
+    global _delete_parent_lock_handle
+    global _delete_parent_lock_key
+    if _delete_parent_lock_handle is not None:
+        logger.debug('Closing parent lock handle for %s', _delete_parent_lock_key)
+        win32file.CloseHandle(_delete_parent_lock_handle)
+        _delete_parent_lock_handle = None
+        _delete_parent_lock_key = None
+
+
+def _lock_delete_parent(pathname):
+    """
+    Lock the parent directory of pathname to prevent it from being deleted.
+
+    This function does not perform the deletion.
+    """
+    global _delete_parent_lock_handle
+    global _delete_parent_lock_key
+    parent = _delete_parent_directory(pathname)
+    parent_key = os.path.normcase(parent)
+    if _delete_parent_lock_handle is not None and _delete_parent_lock_key == parent_key:
+        logger.debug('Reusing parent lock handle for %s', parent_key)
+        return
+    _close_delete_parent_lock()
+    flags = win32con.FILE_FLAG_BACKUP_SEMANTICS | getattr(
+        win32con, 'FILE_FLAG_OPEN_REPARSE_POINT', 0x00200000)
+    access = getattr(win32con, 'FILE_READ_ATTRIBUTES', 0x80)
+    try:
+        handle = win32file.CreateFile(
+            parent,
+            access,
+            win32con.FILE_SHARE_READ,
+            None,
+            win32con.OPEN_EXISTING,
+            flags,
+            None)
+    except pywintypes.error as e:
+        raise OSError(errno.EACCES,
+                      "Access denied locking directory before delete()",
+                      pathname) from e
+    if handle == win32file.INVALID_HANDLE_VALUE:
+        raise OSError(errno.EACCES,
+                      "Access denied locking directory before delete()",
+                      pathname)
+    try:
+        attrs = win32file.GetFileAttributesW(parent)
+    except pywintypes.error:
+        win32file.CloseHandle(handle)
+        raise
+    if attrs & FILE_ATTRIBUTE_REPARSE_POINT:
+        win32file.CloseHandle(handle)
+        raise OSError(errno.EACCES,
+                      "Refusing to delete through a directory link",
+                      pathname)
+    logger.debug('Opened parent lock handle for %s', parent_key)
+    _delete_parent_lock_handle = handle
+    _delete_parent_lock_key = parent_key
+
+
+def is_handle_valid(h):
+    """
+    Check if a Windows file handle is still valid.
+
+    FIXME: temporary function
+
+    Returns True if the handle is valid, False otherwise.
+    """
+    try:
+        win32file.GetFileType(h)
+        return True
+    except TypeError:
+        # TypeError happens in tests with mock.
+        return False
+    except pywintypes.error as e:
+        # ERROR_INVALID_HANDLE = 6
+        return e.winerror != 6
+
+def with_parent_lock(pathname, func, *args, **kwargs):
+    """
+    Run a function with a lock on the parent directory of pathname.
+
+    This prevents race conditions where the parent directory is deleted
+    while the function is running.
+
+    If args/kwargs are provided, passes them to func.
+    Otherwise, calls func() with no arguments.
+    """
+    if not _delete_parent_lock_needed(pathname):
+        return func(*args, **kwargs)
+    logger.debug('with_parent_lock(%s): acquiring lock', pathname)
+    _lock_delete_parent(pathname)
+    logger.debug('lock acquired: calling clean function with parent lock, is_handle_valid(%s)=%s',
+        _delete_parent_lock_key,
+        is_handle_valid(_delete_parent_lock_handle))
+    try:
+        return func(*args, **kwargs)
+    except Exception as e:
+        _close_delete_parent_lock()
+        raise e from e
+
+if IS_WINDOWS:
+    atexit.register(_close_delete_parent_lock)
+
+
 def delete_locked_file(pathname):
     """Delete a file that is currently in use"""
     if os.path.exists(pathname):
@@ -285,7 +431,7 @@ def delete_registry_key(parent_key, really_delete, excludekeys=None):
     the key exists."""
     parent_key = str(parent_key)  # Unicode to byte string
     excludekeys = excludekeys or []
-    
+
     # Check if this key is excluded
     for exclude_path in excludekeys:
         # Normalize paths for comparison (case-insensitive)
@@ -296,7 +442,7 @@ def delete_registry_key(parent_key, really_delete, excludekeys=None):
            normalized_parent.startswith(normalized_exclude + '\\'):
             logger.debug('Skipping excluded registry key: %s', parent_key)
             return False
-    
+
     (hive, parent_sub_key) = split_registry_key(parent_key)
     hkey = None
     try:
@@ -314,19 +460,19 @@ def delete_registry_key(parent_key, really_delete, excludekeys=None):
     child_keys = [
         parent_key + '\\' + winreg.EnumKey(hkey, i) for i in range(keys_size)
     ]
-    
+
     # Check if any child keys are excluded
     has_excluded_children = False
     for child_key in child_keys:
         child_deleted = delete_registry_key(child_key, True, excludekeys)
         if not child_deleted:
             has_excluded_children = True
-    
+
     # If any child is excluded, preserve this parent key
     if has_excluded_children:
         logger.debug('Preserving parent key with excluded children: %s', parent_key)
         return False
-    
+
     try:
         winreg.DeleteKey(hive, parent_sub_key)
     except PermissionError:
