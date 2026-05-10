@@ -37,12 +37,10 @@ install:
   - # The Visual Studio 2013 image had msys, but Visual Studio 2022 image does not.
   #- ps: '& "$env:APPVEYOR_BUILD_FOLDER\windows\msys-install.ps1"'
   - ps: '& "$env:APPVEYOR_BUILD_FOLDER\windows\python-gtk3-install.ps1"'
-  # UPX 4.0.2, 4.1.0, and 4.2.3 cause ModuleNotFoundError during build
-  # UPX 4.0.1 works
-  - ps: if (-not (Test-Path upx.zip)) { Start-FileDownload "https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-win64.zip" -FileName upx.zip}
-  - ps: Get-FileHash upx.zip
+  - ps: if (-not (Test-Path upx.zip)) { Start-FileDownload "https://github.com/upx/upx/releases/download/v5.1.1/upx-5.1.1-win64.zip" -FileName upx.zip}
+  - ps: $hash = (Get-FileHash upx.zip -Algorithm SHA256).Hash; if ($hash -ne 'fa5380bca4c2718547aaa0134bc0d8a7fa27e102f0ac6371573d60d1c21d64de') { throw "SHA256 mismatch=$hash" }
   - '%SZ_EXE% x upx.zip'
-  - 'rename upx-4.0.1-win64 upx'
+  - 'rename upx-5.1.1-win64 upx'
   - 'dir .\upx\'
   # Update NSIS from 3.03 to 3.12.
   - ps: if (-not (Test-Path nsis-3.12-setup.exe)) { Start-FileDownload "https://sourceforge.net/projects/nsis/files/NSIS%203/3.12/nsis-3.12-setup.exe/download" -FileName nsis-3.12-setup.exe }

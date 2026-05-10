@@ -823,10 +823,7 @@ def shrink(fast_build):
     clean_translations()
     remove_empty_dirs('dist')
     strip()
-    if False:
-        upx(fast_build)
-    else:
-        logger.warning('upx disabled because it breaks startup')
+    upx(fast_build)
     clean_dist_locale()
 
     delete_linux_only()
