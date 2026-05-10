@@ -21,6 +21,7 @@ from bleachbit.FileUtilities import children_in_directory
 from bleachbit.Options import options
 from bleachbit.Process import is_process_running
 from bleachbit import Action, CleanerML, Command, FileUtilities, Memory, Special
+from bleachbit import IS_POSIX
 from bleachbit.GtkShim import Gtk, Gdk, HAVE_GTK
 from bleachbit.Wipe import wipe_path
 
@@ -511,27 +512,9 @@ class System(Cleaner):
                         yield Command.Delete(filename)
 
         # trash
-        if 'posix' == os.name and 'trash' == option_id:
-            dirname = os.path.expanduser("~/.Trash")
-            for filename in children_in_directory(dirname, False):
-                yield Command.Delete(filename)
-            # fixme http://www.ramendik.ru/docs/trashspec.html
-            # http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
-            # ~/.local/share/Trash
-            # * GNOME 2.22, Fedora 9
-            # * KDE 4.1.3, Ubuntu 8.10
-            dirname = os.path.expanduser("~/.local/share/Trash/files")
-            for filename in children_in_directory(dirname, True):
-                yield Command.Delete(filename)
-            dirname = os.path.expanduser("~/.local/share/Trash/info")
-            for filename in children_in_directory(dirname, True):
-                yield Command.Delete(filename)
-            dirname = os.path.expanduser("~/.local/share/Trash/expunged")
-            # desrt@irc.gimpnet.org tells me that the trash
-            # backend puts files in here temporary, but in some situations
-            # the files are stuck.
-            for filename in children_in_directory(dirname, True):
-                yield Command.Delete(filename)
+        if IS_POSIX and 'trash' == option_id:
+            for p in Unix.get_trash_paths():
+                yield p
 
         # clipboard
         if HAVE_GTK and 'clipboard' == option_id:
