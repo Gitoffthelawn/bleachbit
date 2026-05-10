@@ -49,7 +49,7 @@ Following this process will help your changes get merged sooner. If you plan to 
 * Test your changes. Consider adding or expanding a unit test.
 * Run the unit tests by running
 ````
-python tests/TestAll.py
+PYTHONWARNINGS=error python3 -m tests.TestAll
 ````
 * Make commits in small, logical units to make them easier to review.
 * Submit the pull request.

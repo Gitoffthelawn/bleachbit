@@ -199,12 +199,11 @@ class CLITestCase(common.BleachbitTestCase):
         """Unit test for invalid locales"""
         original_locale = locale.getlocale(locale.LC_NUMERIC)
         old_lang = common.get_env('LANG')
-        common.put_env('LANG', 'blahfoo')
-        # tests are run from the parent directory
-        args = [get_executable(), '-m', 'bleachbit.CLI', '--version']
-        output = run_external(args, timeout=RUN_EXTERNAL_TIMEOUT)
-        self.assertNotEqual(output[1].find('Copyright'), -1, str(output))
-        common.put_env('LANG', old_lang)
+        with common.set_temporary_env('LANG', 'blahfoo'):
+            # tests are run from the parent directory
+            args = [get_executable(), '-m', 'bleachbit.CLI', '--version']
+            output = run_external(args, timeout=RUN_EXTERNAL_TIMEOUT)
+            self.assertNotEqual(output[1].find('Copyright'), -1, str(output))
         self.assertEqual(common.get_env('LANG'), old_lang)
         self.assertEqual(locale.getlocale(locale.LC_NUMERIC), original_locale)
 
