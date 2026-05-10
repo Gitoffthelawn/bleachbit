@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: andrew@bleachbit.org\n"
 "POT-Creation-Date: 2026-04-05 14:48-0600\n"
-"PO-Revision-Date: 2026-05-04 17:09+0000\n"
+"PO-Revision-Date: 2026-05-11 11:12+0000\n"
 "Last-Translator: Michal L <michalrmsmi@wp.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/bleachbit/main/"
 "pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17.1\n"
+"X-Generator: Weblate 2026.5-dev\n"
 "X-Launchpad-Export-Date: 2021-11-11 16:00+0000\n"
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: POLAND\n"
@@ -256,10 +256,8 @@ msgstr "Historia formularzy"
 #: ../cleaners/librewolf.xml ../cleaners/waterfox.xml ../cleaners/zen.xml
 #: ../cleaners/palemoon.xml ../cleaners/firefox.xml
 #: ../cleaners/internet_explorer.xml
-#, fuzzy
-#| msgid "Delete the search history"
 msgid "Saved form entries and search bar history"
-msgstr "Usuwa historię wyszukiwania"
+msgstr "Usuwa dane wprowadzone do formularzy i historię paska wyszukiwania"
 
 #: ../cleaners/librewolf.xml ../cleaners/vivaldi.xml ../cleaners/waterfox.xml
 #: ../cleaners/epiphany.xml ../cleaners/zen.xml ../cleaners/chromium.xml
@@ -523,15 +521,10 @@ msgid "Places"
 msgstr "Miejsca"
 
 #: ../cleaners/epiphany.xml
-#, fuzzy
-#| msgid ""
-#| "A database of URLs including bookmarks, favicons, and a history of "
-#| "visited web sites"
 msgid ""
 "A database of URLs including bookmarks, favicons, and a history of visited "
 "websites"
-msgstr ""
-"Baza adresów URL zawierająca zakładki, favikony i historię przeglądania"
+msgstr "Baza adresów URL zawierająca zakładki, favikony i historię przeglądania"
 
 #: ../cleaners/epiphany.xml
 msgid "This option deletes all bookmarks."
@@ -1021,11 +1014,9 @@ msgstr "Nie ma instalacji $(^NameDA)."
 
 #. TRANSLATORS: Title of the installation mode page in the Windows installer. User selects whether to install for all users or the current user.
 #: windows/NsisInclude/NsisMultiUserLang.nsh
-#, fuzzy
-#| msgid "Choose a folder"
 msgctxt "nsis:MULTIUSER_PAGE_TITLE"
 msgid "Choose Users"
-msgstr "Wybierz folder"
+msgstr "Wybierz użytkowników"
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:MULTIUSER_REINSTALL_DIFF_VERSION_ALL_USERS"
@@ -1065,24 +1056,25 @@ msgid ""
 "$(^NameDA) is installed both for all users and for the current user.\n"
 "Select which installation to remove."
 msgstr ""
+"$(^NameDA) jest już zainstalowany zarówno dla wszystkich użytkowników oraz "
+"dla obecnego użytkownika.\n"
+"Wybierz, którą instalację usunąć."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:MULTIUSER_UNINSTALL_PAGE_SUBTITLE"
 msgid "Choose for which users to remove $(^NameDA)."
-msgstr ""
+msgstr "Wybierz dla których użytkowników usunąć $(^NameDA)."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_CORE_DESCRIPTION"
 msgid ""
 "These are the basic files needed for ${prodname} to function (required)."
-msgstr ""
+msgstr "Podstawowe pliki potrzebne dla ${prodname} do działania (wymagane)."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
-#, fuzzy
-#| msgid "Choose files to shred"
 msgctxt "nsis:SECTION_CORE_NAME"
 msgid "Core files (required)"
-msgstr "Wybierz pliki do wyczyszczenia zawartości"
+msgstr "Pliki podstawowe (wymagane)"
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_DESKTOP_DESCRIPTION"
@@ -1095,35 +1087,36 @@ msgstr "Stwórz skrót na pulpicie."
 #| msgid "Desktop widgets"
 msgctxt "nsis:SECTION_DESKTOP_NAME"
 msgid "Desktop"
-msgstr "Widżety pulpitu"
+msgstr "Pulpit"
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_INTEGRATE_SHRED_DESCRIPTION"
 msgid ""
 "Add an option to delete files from the file context menu in Windows Explorer."
 msgstr ""
+"Dodaj opcję usuwania plików do menu kontekstowego Eksploratora plików "
+"systemu Windows."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
-#, fuzzy
 msgctxt "nsis:SECTION_INTEGRATE_SHRED_NAME"
 msgid "Integrate Shred"
-msgstr "Zintegruj Niszczarkę."
+msgstr "Zintegruj Niszczarkę"
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_QUICK_LAUNCH_DESCRIPTION"
 msgid "Create a shortcut on the Quick Launch bar."
-msgstr ""
+msgstr "Stwórz skrót na pasku szybkiego uruchamiania."
 
 #. TRANSLATORS: Name of the quick launch section in the Windows installer: quick launch is a toolbar in the Windows taskbar that allows users to quickly access frequently used programs.
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_QUICK_LAUNCH_NAME"
 msgid "Quick Launch"
-msgstr ""
+msgstr "Szybkie uruchamianie"
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_SHORTCUTS_DESCRIPTION"
 msgid "Create shortcuts to ${prodname}"
-msgstr ""
+msgstr "Stwórz skróty do ${prodname}"
 
 #. TRANSLATORS: Name of the shortcuts section in the Windows installer: user selects which shortcuts to install.
 #: windows/NsisInclude/NsisMultiUserLang.nsh
@@ -1147,11 +1140,10 @@ msgctxt "nsis:SECTION_TRANSLATIONS_DESCRIPTION"
 msgid ""
 "Install language files to use ${prodname} in your preferred local language."
 msgstr ""
+"Zainstaluj pliki językowe, aby używać ${prodname} w preferowanym języku."
 
 #. TRANSLATORS: Name of the translations section in the Windows installer: user selects which translations to install.
 #: windows/NsisInclude/NsisMultiUserLang.nsh
-#, fuzzy
-#| msgid "Localizations"
 msgctxt "nsis:SECTION_TRANSLATIONS_NAME"
 msgid "Translations"
 msgstr "Tłumaczenia"
@@ -1165,13 +1157,13 @@ msgstr "Dodaj deinstalator programu."
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SHORTCUT_DEBUGGING_TERMINAL"
 msgid "${prodname} Debugging Terminal"
-msgstr ""
+msgstr "${prodname} Terminal Debugowania"
 
 #. TRANSLATORS: Shortcut name for a desktop shortcut that runs without UAC elevation (admin privileges).
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SHORTCUT_NO_UAC"
 msgid "${prodname} (No UAC)."
-msgstr ""
+msgstr "${prodname} (Bez UAC)."
 
 #. TRANSLATORS: Context menu item in Windows Explorer for securely shredding files.
 #: windows/NsisInclude/NsisMultiUserLang.nsh
@@ -1188,6 +1180,11 @@ msgid ""
 "including any files (such as custom cleaners) that you may have added or "
 "changed."
 msgstr ""
+"${prodname} zostanie odinstalowany z następującego katalogu.\n"
+"Naciśnij przycisk Odinstaluj, aby rozpocząć deinstalację.\n"
+"UWAGA: Deinstalator usunie całkowicie katalog instalacji, wraz z wszystkimi "
+"plikami (takimi jak niestandardowe instrukcje czyszczące), które mogły "
+"zostać dodane lub zmienione."
 
 #. TRANSLATORS: Multi-value variables are explained
 #. in the online documentation. Basically, they are like
@@ -1195,10 +1192,8 @@ msgstr ""
 #. can have multiple values. They're a way to make CleanerML
 #. files more concise.
 #: ../bleachbit/Action.py
-#, fuzzy
-#| msgid "Deep scan does not support multi-value variable."
 msgid "Deep scan does not support multi-value variables."
-msgstr "Głębokie skanowanie nieobsługuje wielowartościowych zmiennych."
+msgstr "Głębokie skanowanie nie obsługuje wielowartościowych zmiennych."
 
 #. TRANSLATORS: This is a lint-style warning that there seems to be a
 #. mild mistake in the CleanerML file because walk.all is expected to
@@ -1396,7 +1391,7 @@ msgstr "System"
 #: ../bleachbit/Cleaner.py ../bleachbit/CLI.py
 #, python-format
 msgid "Wipe empty space in %s"
-msgstr ""
+msgstr "Wyczyść pustą przestrzeń w %s"
 
 #. TRANSLATORS: Progress message shown typically on startup.
 #. 'Native' refers to the .xml cleaners designed for this application,
@@ -1429,9 +1424,9 @@ msgstr "instrukcje sprzątania nie są poprawne: %s"
 
 #. TRANSLATORS: Error shown on CLI, and %s is the name of a cleaning action
 #: ../bleachbit/CLI.py
-#, python-format
+#, fuzzy, python-format
 msgid "Wildcard characters are not allowed in --except: %s"
-msgstr ""
+msgstr "Znaki wieloznaczne (wildcard) nie są dozwolone w --except: %s"
 
 #. TRANSLATORS: This is the command line usage.  Don't translate
 #. %prog, but do translate options, cleaner, and option.
@@ -1442,7 +1437,8 @@ msgstr ""
 #, fuzzy
 #| msgid "usage: %prog [options] cleaner.option1 cleaner.option2"
 msgid "usage: %prog [options] cleaner.option1 [cleaner.option2 ...]"
-msgstr "użycie: %prog [opcje] instrukcja.sprzątania1 instrukcja.sprzątania2"
+msgstr ""
+"użycie: %prog [opcje] instrukcja.sprzątania1 [instrukcja.sprzątania2 ...]"
 
 #. TRANSLATORS: Help for the --list-cleaners command on the CLI,
 #. and 'list' is a verb
@@ -1473,7 +1469,7 @@ msgstr "wyczyść zawartość plików i katalogów"
 #, fuzzy
 #| msgid "wipe free space in the given paths"
 msgid "wipe empty space in the given paths"
-msgstr "wyczyść wolną przestrzeń w podanych ścieżkach"
+msgstr "wyczyść pustą przestrzeń w podanych ścieżkach"
 
 #. TRANSLATORS: Help for the --overwrite option on the CLI,
 #. and 'overwrite' is a verb
@@ -1502,8 +1498,10 @@ msgstr "włącz wszystkie opcje, które nie mają ostrzeżenia"
 #. TRANSLATORS: Help for the --except option on the CLI,
 #. and 'exclude' is a verb.
 #: ../bleachbit/CLI.py
+#, fuzzy
 msgid "exclude cleaner options (can be repeated, comma-separated)"
 msgstr ""
+"wyklucz instrukcje czyszczące (mogą się powtarzać, rozdziel przecinkiem)"
 
 #. TRANSLATORS: Help for the --debug option on the CLI,
 #. and 'set' is a verb.
@@ -1538,16 +1536,12 @@ msgstr "aktualizuj winapp2.ini, jeśli dostępna jest nowa wersja"
 
 #. TRANSLATORS: Error message shown on CLI.
 #: ../bleachbit/CLI.py
-#, fuzzy
-#| msgid ""
-#| "Specify only one of these commands: --list-cleaners, --wipe-free-space, --"
-#| "preview, --clean"
 msgid ""
 "Specify only one of these commands: --list-cleaners, --wipe-empty-space, --"
 "preview, --clean, --shred"
 msgstr ""
-"Określ tylko jedno z tych poleceń: --list-cleaners, --wipe-free-space, --"
-"preview, --clean"
+"Wybierz tylko jedno z tych poleceń: --list-cleaners, --wipe-empty-space, --"
+"preview, --clean, --shred"
 
 #. TRANSLATORS: Log message on the CLI.
 #: ../bleachbit/CLI.py
@@ -1556,10 +1550,8 @@ msgstr "Sprawdzanie online dostępności aktualizacji bazy winapp2.ini"
 
 #. TRANSLATORS: Error message on the CLI.
 #: ../bleachbit/CLI.py
-#, fuzzy
-#| msgid "No directories given for --wipe-free-space"
 msgid "No directories given for --wipe-empty-space"
-msgstr "Nie podano katalogów dla --wipe-free-space"
+msgstr "Nie podano katalogów dla --wipe-empty-space"
 
 #. TRANSLATORS: Log message on the CLI.
 #: ../bleachbit/CLI.py
@@ -1570,10 +1562,8 @@ msgstr "Czyszczenie wolnego miejsca może zająć dużo czasu."
 
 #. TRANSLATORS: Error message on the CLI.
 #: ../bleachbit/CLI.py
-#, fuzzy
-#| msgid "No work to do. Specify options."
 msgid "No operations selected. Specify cleaner options."
-msgstr "Brak pracy do wykonania. Określ opcje."
+msgstr "Nie wybrano żadnych operacji. Określ opcje czyszczenia."
 
 #. TRANSLATORS: '--overwrite' and '--clean' are command line options
 #: ../bleachbit/CLI.py
@@ -1654,7 +1644,7 @@ msgstr ""
 #. Expert mode is an option in the preferences to relax guardrails.
 #: ../bleachbit/Constant.py
 msgid "This option requires expert mode. Enable it in Preferences."
-msgstr ""
+msgstr "Ta opcja wymaga trybu eksperta. Włącz ją w Preferencjach."
 
 #. TRANSLATORS: Log message where %s is the pathname.
 #: ../bleachbit/FileUtilities.py
@@ -1691,33 +1681,33 @@ msgstr ""
 #. TRANSLATORS: Title of the font check dialog
 #: ../bleachbit/FontCheckDialog.py
 msgid "Font check"
-msgstr ""
+msgstr "Sprawdzenie czcionki"
 
 #. TRANSLATORS: Button label in the font check dialog
 #: ../bleachbit/FontCheckDialog.py
 msgid "Text is okay"
-msgstr ""
+msgstr "Tekst jest w porządku"
 
 #. TRANSLATORS: Button label in the font check dialog. This is one of
 #. three buttons the user can click to report how the text appears.
 #. The user clicks this if the text is readable but appears fuzzy.
 #: ../bleachbit/FontCheckDialog.py
 msgid "Text is blurry"
-msgstr ""
+msgstr "Tekst jest niewyraźny"
 
 #. TRANSLATORS: Button label in the font check dialog in case the font
 #. looks like an alien language. This is one of three buttons the user
 #. can click to report how the text appears.
 #: ../bleachbit/FontCheckDialog.py
 msgid "Text is unrecognizable"
-msgstr ""
+msgstr "Tekst jest nie do rozpoznania"
 
 #. TRANSLATORS: Question shown in the font check dialog displayed
 #. on startup on Windows. There are bugs that for some users the
 #. font is blurry or resembles an alien language.
 #: ../bleachbit/FontCheckDialog.py
 msgid "Does all the text in this window look okay?"
-msgstr ""
+msgstr "Czy tekst w tym oknie wygląda dobrze?"
 
 #. TRANSLATORS: Title of a file chooser dialog.
 #: ../bleachbit/GuiApplication.py
@@ -1783,7 +1773,7 @@ msgstr "O systemie"
 #. replace the username with a placeholder.
 #: ../bleachbit/GuiApplication.py
 msgid "Anonymize"
-msgstr ""
+msgstr "Anonimizuj"
 
 #. TRANSLATORS: Label for the Cancel button in several dialog windows:
 #. file chooser, folder choose, delete confirmation, and warning dialogs.
@@ -1846,14 +1836,14 @@ msgstr "Potwierdź przed usunięciem"
 #: ../bleachbit/GuiBasic.py
 #, python-format
 msgid "Enable %(option)s"
-msgstr ""
+msgstr "Włącz %(option)s"
 
 #. TRANSLATORS: Check button label. %(option)s is the name of
 #. the option being enabled (e.g. "shred files").
 #: ../bleachbit/GuiBasic.py
 #, python-format
 msgid "Remember my choice for %(option)s"
-msgstr ""
+msgstr "Zapamiętaj mój wybór dla %(option)s"
 
 #. TRANSLATORS: Button label in a warning dialog to confirm enabling an option.
 #. The underscore is the accelerator key.
@@ -1900,10 +1890,8 @@ msgstr "Ilość plików"
 #. has an official abbreviation (e.g., "Mo" in French); otherwise keep
 #. "MB".
 #: ../bleachbit/GuiChaff.py
-#, fuzzy
-#| msgid "Size"
 msgid "Size (MB)"
-msgstr "Rozmiar"
+msgstr "Rozmiar (MB)"
 
 #. TRANSLATORS: Option in combo box to choose to stop when free space
 #. reaches a certain percentage.
@@ -1958,7 +1946,7 @@ msgstr "E-maile Hillary Clinton"
 #. generating chaff files.
 #: ../bleachbit/GuiChaff.py
 msgid "Stop after"
-msgstr ""
+msgstr "Zatrzymaj po"
 
 #. TRANSLATORS: Label for the combo box that selects what to do
 #. when chaff generation is finished.
@@ -1986,7 +1974,7 @@ msgstr "Nie usuwaj"
 #. Unicode (…) or as Unicode escape (\u2026).
 #: ../bleachbit/GuiChaff.py
 msgid "Downloading inspiration content…"
-msgstr ""
+msgstr "Pobieranie inspirujących treści…"
 
 #. TRANSLATORS: Button label in a dialog window to start making
 #. chaff files.
@@ -2003,14 +1991,16 @@ msgstr "Pobieranie nie powiodło się"
 #. TRANSLATORS: Notification shown in an infobar when
 #. chaff file generation is aborted by the user.
 #: ../bleachbit/GuiChaff.py
+#, fuzzy
 msgid "Chaff generation aborted"
-msgstr ""
+msgstr "Przerwano generowanie zawartości"
 
 #. TRANSLATORS: Notification shown in an infobar when chaff file generation
 #. is complete.
 #: ../bleachbit/GuiChaff.py
+#, fuzzy
 msgid "Chaff generation complete"
-msgstr ""
+msgstr "Zakończono generowanie zawartości"
 
 #. TRANSLATORS: Progress message shown while generating chaff files.
 #. 'Generating' is a present participle.
@@ -2024,6 +2014,8 @@ msgstr "Tworzenie plików…"
 #: ../bleachbit/GuiCookie.py
 msgid "Select the cookies to keep when cleaning cookies across browsers."
 msgstr ""
+"Wybierz pliki cookie, które mają być zachowywane podczas czyszczenia plików "
+"cookie w przeglądarkach."
 
 #. TRANSLATORS: This is a notice in the cookie manager about supported
 #. cookie types. The hyperlink points to the documentation website.
@@ -2035,6 +2027,8 @@ msgid ""
 "Only cookies are preserved. Site data is always deleted. <a "
 "href='{url}'>Learn more</a>"
 msgstr ""
+"Zachowywane są wyłącznie pliki cookies. Dane witryn są zawsze usuwane. <a "
+"href='{url}'>Dowiedz się więcej</a>"
 
 #. TRANSLATORS: Label for the search entry in the manage cookies dialog.
 #: ../bleachbit/GuiCookie.py
@@ -2045,19 +2039,19 @@ msgstr "Narzędzie wyszukiwania:"
 #. 'Filter' is a verb meaning to narrow down the list by typing.
 #: ../bleachbit/GuiCookie.py
 msgid "Filter cookies..."
-msgstr ""
+msgstr "Filtruj pliki cookies..."
 
 #. TRANSLATORS: Toggle button label in the manage cookies dialog.
 #. "Show" is a command (imperative).
 #. 'Selected' refers to selected cookies (the noun "cookies" is implied).
 #: ../bleachbit/GuiCookie.py
 msgid "Show Selected"
-msgstr ""
+msgstr "Pokaż wybrane"
 
 #. TRANSLATORS: Tooltip for the "Show Selected" toggle button.
 #: ../bleachbit/GuiCookie.py
 msgid "Only show cookies that are currently selected"
-msgstr ""
+msgstr "Wyświetlaj tylko obecnie wybrane pliki cookies"
 
 #. TRANSLATORS: Column header in the manage cookies dialog.
 #. 'Host' is a noun meaning the website hostname (domain name) of the cookie.
@@ -2089,21 +2083,22 @@ msgid ""
 "Expert mode enables advanced features and relaxes guardrails. Use extra "
 "caution in expert mode."
 msgstr ""
+"Tryb eksperta umożliwia korzystanie z zaawansowanych funkcji i rozluźnia "
+"funkcje ochronne. Zachowaj szczególną ostrożność podczas używania trybu "
+"eksperta."
 
 #. TRANSLATORS: Used both as (1) a checkbox label in the preferences dialog
 #. to bypass some safety guardails for advanced users and (2) the title of
 #. dialog asking to confirm this choice.
 #: ../bleachbit/GuiPreferences.py
-#, fuzzy
-#| msgid "Dark mode"
 msgid "Expert mode"
-msgstr "Tryb ciemny"
+msgstr "Tryb eksperta"
 
 #. TRANSLATORS: Notice shown in an infobar after changing a preference
 #. that requires starting the application to be effective.
 #: ../bleachbit/GuiPreferences.py
 msgid "Restart BleachBit for full effect."
-msgstr ""
+msgstr "Zrestartuj BleachBit, aby wdrożyć zmiany."
 
 #. TRANSLATORS: Title for the preferences dialog
 #: ../bleachbit/GuiPreferences.py ../share/app-menu.ui
@@ -2117,10 +2112,8 @@ msgstr "Ogólne"
 
 #. TRANSLATORS: Sidebar label for the software updates page of the preferences dialog.
 #: ../bleachbit/GuiPreferences.py
-#, fuzzy
-#| msgid "Update"
 msgid "Updates"
-msgstr "Aktualizuj"
+msgstr "Aktualizacje"
 
 #. TRANSLATORS: Sidebar label for the "Languages" page in the Preferences dialog.
 #: ../bleachbit/GuiPreferences.py
@@ -2144,11 +2137,12 @@ msgstr "Napędy"
 #: ../bleachbit/GuiPreferences.py
 msgid "Some GTK themes do not support both light and dark modes."
 msgstr ""
+"Niektóre motywy GTK nie obsługują zarówno trybu jasnego, jak i ciemnego."
 
 #. TRANSLATORS: Success message shown in the infobar.
 #: ../bleachbit/GuiPreferences.py
 msgid "Warning confirmations reset."
-msgstr ""
+msgstr "Potwierdzenia ostrzeżeń zresetowane."
 
 #. TRANSLATORS: Checkbox label in the preferences dialog.
 #: ../bleachbit/GuiPreferences.py
@@ -2238,18 +2232,14 @@ msgstr "Powiadomienia o aktualizacji"
 #. TRANSLATORS: Section title (noun) on the Preferences - General page
 #. for options related to cleaning stored data.
 #: ../bleachbit/GuiPreferences.py
-#, fuzzy
-#| msgid "Clean"
 msgid "Cleaning"
-msgstr "Wyczyść"
+msgstr "Czyszczenie"
 
 #. TRANSLATORS: Section title in Preferences for user interface options
 #. such as dark mode and window behavior.
 #: ../bleachbit/GuiPreferences.py
-#, fuzzy
-#| msgid "Internet"
 msgid "Interface"
-msgstr "Internet"
+msgstr "Interfejs"
 
 #. TRANSLATORS: Checkbox label to remember the window size and position
 #. between application launches.
@@ -2273,18 +2263,19 @@ msgstr "Motyw Windows 10"
 #. Fontconfig, which is software, is a proper noun.
 #: ../bleachbit/GuiPreferences.py
 msgid "Use Fontconfig text rendering backend"
-msgstr ""
+msgstr "Użyj Fontconfig jako silnika renderowania tekstu"
 
 #. TRANSLATORS: Tooltip for the fontconfig text rendering checkbox in the preferences dialog.
 #: ../bleachbit/GuiPreferences.py
 msgid "May fix blurry or unreadable text. Requires restart."
 msgstr ""
+"Może naprawić rozmazany lub nieczytelny tekst. Wymaga ponownego uruchomienia."
 
 #. TRANSLATORS: Section title on the preferences general page,
 #. labelling options for OS integration and advanced/developer features.
 #: ../bleachbit/GuiPreferences.py
 msgid "Integration and advanced"
-msgstr ""
+msgstr "Integracja i opcje zaawansowane"
 
 #. TRANSLATORS: Checkbox label in the preferences dialog.
 #. 'Shred' means securely delete a file to prevent data recovery.
@@ -2331,18 +2322,19 @@ msgstr "Usuń"
 #. TRANSLATORS: Section title on the preferences languages page.
 #: ../bleachbit/GuiPreferences.py
 msgid "BleachBit interface language"
-msgstr ""
+msgstr "Język interfejsu programu BleachBit"
 
 #. TRANSLATORS: Section title on the preferences languages page.
 #: ../bleachbit/GuiPreferences.py
 msgid "Language files to keep when cleaning applications"
-msgstr ""
+msgstr "Pliki językowe do zachowania podczas czyszczenia aplikacji"
 
 #. TRANSLATORS: Column header in the languages treeview.
 #. This column controls whether to keep the language.
 #: ../bleachbit/GuiPreferences.py
+#, fuzzy
 msgid "Keep"
-msgstr ""
+msgstr "Zachowaj"
 
 #. TRANSLATORS: Column header in the languages treeview showing the
 #. language code (e.g., 'en_US').
@@ -2361,10 +2353,8 @@ msgstr "Nazwa"
 
 #. TRANSLATORS: Error message shown in the infobar.
 #: ../bleachbit/GuiPreferences.py
-#, fuzzy
-#| msgid "This path already exists in the whitelist."
 msgid "This path already exists in the keep list."
-msgstr "Ta ścieżka już istnieje na białej liście."
+msgstr "Ta ścieżka już istnieje na liście do zachowania."
 
 #. TRANSLATORS: Error message shown in the infobar.
 #: ../bleachbit/GuiPreferences.py
@@ -2374,12 +2364,12 @@ msgstr "Ta ścieżka już istnieje na liście niestandardowej."
 #. TRANSLATORS: Error message shown in the infobar.
 #: ../bleachbit/GuiPreferences.py
 msgid "This path is protected. To bypass protection, enable expert mode."
-msgstr ""
+msgstr "Ta ścieżka jest chroniona. Aby ominąć ochronę, włącz tryb eksperta."
 
 #. TRANSLATORS: Title of warning dialog shown when adding a protected path.
 #: ../bleachbit/GuiPreferences.py
 msgid "Protected Path"
-msgstr ""
+msgstr "Chroniona ścieżka"
 
 #. TRANSLATORS: Noun used as a column header in the preferences dialog.
 #: ../bleachbit/GuiPreferences.py
@@ -2393,10 +2383,9 @@ msgstr "Folder"
 
 #. TRANSLATORS: %s is a file or folder path that was just added
 #: ../bleachbit/GuiPreferences.py
-#, fuzzy, python-format
-#| msgid "Access denied: %s"
+#, python-format
 msgid "Added: %s"
-msgstr "Odmowa dostępu: %s"
+msgstr "Dodano: %s"
 
 #. TRANSLATORS: %s is a file or folder path that was just removed
 #: ../bleachbit/GuiPreferences.py
@@ -2451,6 +2440,8 @@ msgid ""
 "Cleaning options with warnings now require expert mode. Enable it in "
 "preferences to clean them."
 msgstr ""
+"Opcje czyszczące wyświetlające ostrzeżenia wymagają teraz trybu eksperta. "
+"Aby je wyczyścić, włącz tę opcję w preferencjach."
 
 #. TRANSLATORS: First-start hint for Linux users shown in
 #. the log on the main screen.
@@ -2574,6 +2565,8 @@ msgstr "Resetowanie pliku konfiguracyjnego, ponieważ jest uszkodzony: %s"
 msgid ""
 "%(cleaner)s - %(option)s cannot be cleaned because expert mode is disabled."
 msgstr ""
+"%(cleaner)s - %(option)s nie może być wyczyszczony, ponieważ tryb eksperta "
+"jest wyłączony."
 
 #. TRANSLATORS: Error message shown in the infobar when the user clicks
 #. the preview or clean button without selecting any cleaner options.
@@ -2591,7 +2584,7 @@ msgstr "Zakończono."
 #. Preserve the ellipsis as literal Unicode (…) or as Unicode escape (\u2026).
 #: ../bleachbit/GuiWindow.py
 msgid "Manage custom paths…"
-msgstr ""
+msgstr "Zarządzaj niestandardowymi ścieżkami…"
 
 #. TRANSLATORS: Tooltip for the preview button on the headerbar.
 #. 'Preview' is a verb, and 'selected operations' refers to
@@ -2637,6 +2630,8 @@ msgid ""
 "BleachBit detected leftover files from an interrupted disk wipe operation. "
 "Would you like to preview them with an option to delete them?"
 msgstr ""
+"BleachBit wykrył pliki pozostałe po przerwanej operacji czyszczenia dysku. "
+"Czy chcesz wyświetlić podgląd z możliwością ich usunięcia?"
 
 #. TRANSLATORS: Error message shown when checking for updates fails.
 #. %s is the error details.
@@ -2777,7 +2772,7 @@ msgstr "Błąd podczas ustawiania domyślnych dysków do niszczenia danych."
 #. Adapt quotation marks around the path placeholder to the typographic conventions of
 #. your language.
 #: ../bleachbit/ProtectedPath.py
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Warning: '%(path)s' may contain important files.\n"
 "\n"
@@ -2785,6 +2780,11 @@ msgid ""
 "\n"
 "Are you sure you want to add this path?"
 msgstr ""
+"Ostrzeżenie: '%(path)s' może zawierać ważne pliki.\n"
+"\n"
+"Rozmiar: %(files)d file(s), %(size)s\n"
+"\n"
+"Czy na pewno chcesz dodać tę ścieżkę?"
 
 #. TRANSLATORS: Warning shown when user tries to add a protected path (no files found).
 #. Do not translate the placeholder %(path)s.
@@ -2797,6 +2797,9 @@ msgid ""
 "\n"
 "Are you sure you want to add this path?"
 msgstr ""
+"Ostrzeżenie: '%(path)s' może zawierać ważne pliki.\n"
+"\n"
+"Czy na pewno chcesz dodać tę ścieżkę?"
 
 #: ../bleachbit/RecognizeCleanerML.py
 msgid "Security warning"
@@ -3021,6 +3024,8 @@ msgstr "Proszę czekać. Zamazywanie wolnej przestrzeni dyskowej."
 #: ../bleachbit/Worker.py
 msgid "To stop this process, press the abort button on the toolbar and wait."
 msgstr ""
+"Aby zatrzymać proces, naciśnij przycisk przerwania na pasku narzędzi i "
+"zaczekaj."
 
 #: ../bleachbit/Worker.py
 msgid ""
@@ -3028,6 +3033,9 @@ msgid ""
 "files may remain on the disk, and they may use all available space. To "
 "remove them, start BleachBit again."
 msgstr ""
+"Jeśli zamknięcie aplikacji zostanie wymuszone przed zakończeniem procesu, na "
+"dysku mogą pozostać duże pliki, które mogą zająć całe dostępne miejsce. Aby "
+"je usunąć, uruchom ponownie BleachBit."
 
 #. TRANSLATORS: %s is replaced with Firefox, System, etc.
 #: ../bleachbit/Worker.py
