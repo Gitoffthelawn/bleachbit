@@ -59,6 +59,7 @@ from bleachbit.Windows import (
     get_font_conf_file,
     get_known_folder_path,
     get_recycle_bin,
+    get_windows_system_paths,
     get_windows_version,
     is_junction,
     move_to_recycle_bin,
@@ -72,9 +73,72 @@ from bleachbit.Windows import (
     get_sid_token_48,
     is_ots_elevation,
     get_splash_screen_delay_seconds,
+    expand_windows_system_vars,
     SplashThread,
 )
 from bleachbit import logger
+
+
+class WindowsSystemPathsTestCase(common.BleachbitTestCase):
+    """Test Windows system directory expansion."""
+
+    def test_get_windows_system_paths_32_bit_os(self):
+        """Unit test get_windows_system_paths() for 32-bit Windows."""
+        env = {
+            'WinDir': r'C:\Windows',
+            'PROCESSOR_ARCHITECTURE': 'x86',
+        }
+        self.assertEqual(
+            [r'C:\Windows\System32'],
+            get_windows_system_paths(env, process_bits=32))
+
+    def test_get_windows_system_paths_64_bit_process(self):
+        """Unit test get_windows_system_paths() for 64-bit Python."""
+        env = {
+            'WinDir': r'C:\Windows',
+            'PROCESSOR_ARCHITECTURE': 'AMD64',
+        }
+        self.assertEqual(
+            [r'C:\Windows\System32', r'C:\Windows\SysWOW64'],
+            get_windows_system_paths(env, process_bits=64))
+
+    def test_get_windows_system_paths_wow64_process(self):
+        """Unit test get_windows_system_paths() for 32-bit Python on 64-bit Windows."""
+        env = {
+            'WinDir': r'C:\Windows',
+            'PROCESSOR_ARCHITECTURE': 'x86',
+            'PROCESSOR_ARCHITEW6432': 'AMD64',
+        }
+        self.assertEqual(
+            [r'C:\Windows\Sysnative', r'C:\Windows\SysWOW64'],
+            get_windows_system_paths(env, process_bits=32))
+
+    def test_get_windows_system_paths(self):
+        """Test get_windows_system_paths() in general"""
+        # Test with default environment
+        ret = get_windows_system_paths()
+        self.assertIsInstance(ret, list)
+        for path in ret:
+            self.assertTrue(os.path.isabs(path))
+            self.assertExists(path)
+
+    def test_expand_windows_system_vars(self):
+        """Unit test expand_windows_system_vars()."""
+        path_arg = (r'%WindowsSystem%\LogFiles\*.log')
+        # Without providing system paths
+        paths = expand_windows_system_vars(path_arg)
+        self.assertIsInstance(paths, list)
+        # On 32-bit OS, it returns one. On 64-bit OS, it returns
+        # 2 (regardless of bitness of the process).
+        self.assertIn(len(paths), (1, 2))
+        # Provide system paths
+        paths = expand_windows_system_vars(
+            path_arg,
+            [r'C:\Windows\Sysnative', r'C:\Windows\SysWOW64'])
+        self.assertEqual(
+            [r'C:\Windows\Sysnative\LogFiles\*.log',
+             r'C:\Windows\SysWOW64\LogFiles\*.log'],
+            paths)
 
 
 if 'win32' == sys.platform:
