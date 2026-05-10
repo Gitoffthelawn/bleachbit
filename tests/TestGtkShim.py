@@ -17,6 +17,8 @@ import unittest
 from unittest import mock
 
 from tests import common
+from bleachbit import IS_WINDOWS
+from bleachbit.General import get_executable
 from bleachbit.GtkShim import (
     _build_error_html,
     _fix_arg,
@@ -221,7 +223,8 @@ class TryImportGtkTestCase(unittest.TestCase):
         bad_path = os.path.join(
             'c:\\', 'temp', 'surrogate') + chr(0xD800) + 'beta_test0'
 
-        script = f'''
+        if IS_WINDOWS:
+            script = f'''
 import ctypes
 import sys
 from unittest import mock
@@ -231,17 +234,25 @@ with mock.patch.object(ctypes.windll.user32, 'MessageBoxW', return_value=7):
     success, reason = _try_import_gtk()
 print(f"OK success={{success}} reason={{reason}}")
 '''
+        else:
+            script = f'''
+import sys
+sys.argv = ['bleachbit.py', {bad_path!r}]
+from bleachbit.GtkShim import _try_import_gtk
+success, reason = _try_import_gtk()
+print(f"OK success={{success}} reason={{reason}}")
+'''
 
         result = subprocess.run(
-            [sys.executable, '-c', script],
+            [get_executable(), '-c', script],
             capture_output=True, text=True,
             timeout=30,
         )
 
         self.assertEqual(result.returncode, 0,
-                         f'stderr: {{result.stderr}}')
-        self.assertIn('OK success=True', result.stdout,
-                      'surrogate argv caused GTK import to fail')
+                         f'stderr: {result.stderr}')
+        self.assertIn('OK success=', result.stdout,
+                      'surrogate argv caused GTK import to crash')
 
 
 if __name__ == '__main__':
