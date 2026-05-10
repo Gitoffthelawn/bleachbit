@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-License-Identifier: GPL-3.0-or-later
+Copyright (c) 2008-2026 Andrew Ziem.
+
+This work is licensed under the terms of the GNU GPL, version 3 or
+later.  See the COPYING file in the top-level directory.
+-->
+<cleaner id="claude">
+  <label>Claude</label>
+  <description>AI assistant</description>
+  <option id="backup">
+    <label>Backup files</label>
+    <description>Delete the backup files</description>
+    <action command="delete" search="walk.all" path="~/.claude/backups/"/>
+  </option>
+  <option id="cache">
+    <label>Cache</label>
+    <description>Delete the cache</description>
+    <action command="delete" search="walk.all" path="~/.claude/cache/"/>
+  </option>
+  <option id="logs">
+    <label>Logs</label>
+    <description>Delete the logs</description>
+    <action command="delete" search="walk.files" path="~/.claude/debug/"/>
+    <action command="delete" search="walk.files" path="~/.claude/logs/"/>
+  </option>
+  <option id="session">
+    <label>Session</label>
+    <description>Delete the conversation history</description>
+    <warning>You would lose resume, continue, and rewind for past sessions</warning>
+    <action command="delete" search="walk.files" path="~/.claude/projects/"/>
+  </option>
+  <option id="tmp">
+    <label>Temporary files</label>
+    <description>Delete the temporary files</description>
+    <action command="delete" search="walk.files" path="~/.claude/" regex="\.tmp$"/>
+    <action command="delete" search="walk.files" path="~/.claude/" regex="\.temp$"/>
+  </option>
+</cleaner>
