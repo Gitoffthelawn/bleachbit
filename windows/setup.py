@@ -323,7 +323,9 @@ def build_py2exe():
         'includes': ['gi'],
         'packages': ['chardet', 'encodings', 'gi', 'gi.overrides', 'plyer'],
         'excludes': ['pyreadline', 'difflib', 'doctest',
-                     'pickle', 'ftplib', 'bleachbit.Unix', 'charset_normalizer'],
+                     'pickle', 'ftplib', 'bleachbit.Unix', 'charset_normalizer',
+                     'setuptools', 'tomli', 'wheel', 'backports',
+                     'importlib_metadata', 'zipp', 'packaging', 'distutils'],
         'dll_excludes': [
             'libgstreamer-1.0-0.dll',
             'CRYPT32.DLL',  # required by ssl
@@ -787,12 +789,20 @@ def recompress_library(fast_build):
     os.remove('dist\\library.zip')
 
     # clean unused modules from library.zip
-    delete_paths = ['distutils', 'plyer\\platforms\\android',
+    delete_paths = ['plyer\\platforms\\android',
                     'plyer\\platforms\\ios', 'plyer\\platforms\\linux', 'plyer\\platforms\\macosx']
     for p in delete_paths:
         path = os.path.join('dist', 'library', p)
         if os.path.exists(path):
             shutil.rmtree(path)
+
+    # remove .dist-info metadata directories
+    for dist_info_dir in glob.glob(os.path.join('dist', 'library', '*.dist-info')):
+        logger.info('Removing .dist-info directory: %s', dist_info_dir)
+        shutil.rmtree(dist_info_dir)
+
+    # remove empty directories
+    remove_empty_dirs('dist\\library')
 
     # recompress library.zip
     os.chdir('dist\\library')
