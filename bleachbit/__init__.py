@@ -49,6 +49,7 @@ IS_LINUX = sys.platform.startswith('linux')
 IS_MAC = sys.platform == 'darwin'
 IS_BSD = sys.platform.startswith(('freebsd', 'openbsd', 'netbsd'))
 IS_NETBSD = sys.platform[:6] == 'netbsd'
+ARCH_BITS = 64 if sys.maxsize > 2**32 else 32
 
 # file system attributes
 FS_CASE_SENSITIVE = not (IS_WINDOWS or IS_MAC)

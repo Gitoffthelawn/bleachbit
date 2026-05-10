@@ -32,9 +32,12 @@ import errno
 import glob
 import hashlib
 import logging
+import ntpath
 import os
 import pathlib
+import re
 import shutil
+import struct
 import sys
 import threading
 import time
@@ -48,7 +51,7 @@ from uuid import UUID
 
 # first party imports
 import bleachbit
-from bleachbit import FileUtilities, IS_WINDOWS
+from bleachbit import FileUtilities, ARCH_BITS, IS_WINDOWS
 from bleachbit.Language import get_text as _
 
 if 'win32' == sys.platform:
@@ -87,6 +90,8 @@ IO_REPARSE_TAG_MOUNT_POINT = 0xA0000003
 FILE_ATTRIBUTE_REPARSE_POINT = 0x400
 
 SPLASH_ICON_SIZE_PX = 256  # 256x256 pixels
+
+WINDOWS_SYSTEM_VAR = 'WindowsSystem'
 
 _delete_parent_lock_admin = None
 _delete_parent_lock_handle = None
@@ -153,6 +158,81 @@ def get_splash_screen_delay_seconds():
             'negative BLEACHBIT_SPLASH_SCREEN_DELAY value: %r', value)
         return 0.0
     return delay
+
+
+def _get_environ_case_insensitive(environ, varname):
+    """Get a Windows environment variable from a mapping."""
+    if varname in environ:
+        return environ[varname]
+    varname_lower = varname.lower()
+    for key, value in environ.items():
+        if key.lower() == varname_lower:
+            return value
+    return None
+
+
+def _is_64_bit_windows(environ):
+    """Return whether the environment indicates a 64-bit Windows OS."""
+    if _get_environ_case_insensitive(environ, 'ProgramW6432'):
+        return True
+    if _get_environ_case_insensitive(environ, 'PROCESSOR_ARCHITEW6432'):
+        return True
+    arch = _get_environ_case_insensitive(environ, 'PROCESSOR_ARCHITECTURE')
+    return bool(arch and arch.upper() in ('AMD64', 'ARM64', 'IA64'))
+
+
+def get_windows_system_paths(environ=None, process_bits=None):
+    """Return Windows system directories for native and 32-bit targets.
+
+    On a 32-bit process running on 64-bit Windows, System32 is redirected to
+    SysWOW64, so Sysnative is used for the native 64-bit system directory.
+
+    Returns:
+        list: A list of Windows system directory paths. On 64-bit Windows,
+              this typically includes both the native system directory
+              (System32 or Sysnative) and SysWOW64. On 32-bit Windows,
+              only System32 is returned. Returns an empty list if the
+              Windows directory cannot be determined.
+
+    """
+    environ = environ or os.environ
+    process_bits = process_bits or ARCH_BITS
+    windir = (_get_environ_case_insensitive(environ, 'WinDir') or
+              _get_environ_case_insensitive(environ, 'SystemRoot'))
+    if not windir:
+        return []
+    windir = windir.rstrip('\\/')
+    if _is_64_bit_windows(environ):
+        native = 'Sysnative' if process_bits == 32 else 'System32'
+        paths = (ntpath.join(windir, native), ntpath.join(windir, 'SysWOW64'))
+    else:
+        paths = (ntpath.join(windir, 'System32'), )
+
+    return list(paths)
+
+
+def expand_windows_system_vars(pathname, system_paths=None):
+    """Expand the multi-value %WindowsSystem% variable in a path.
+
+    Args:
+        pathname: The path string containing the %WindowsSystem% variable.
+        system_paths: Optional list of system paths to use. If not provided,
+                     the function will determine the appropriate system paths
+                     based on the current environment.
+
+    Returns:
+        list: A list of expanded path strings, one for each system path.
+    """
+    pattern = re.compile(rf'%{WINDOWS_SYSTEM_VAR}%', flags=re.IGNORECASE)
+    if not pattern.search(pathname):
+        return [pathname]
+    system_paths = system_paths or get_windows_system_paths()
+    if not system_paths:
+        return [pathname]
+    return [
+        pattern.sub(lambda _match: system_path, pathname)
+        for system_path in system_paths
+    ]
 
 
 def browse_file(_, title):
@@ -243,7 +323,8 @@ def _delete_parent_lock_needed(pathname):
         try:
             _delete_parent_lock_admin = shell.IsUserAnAdmin()
         except Exception:
-            logger.exception('error checking whether current user is an administrator')
+            logger.exception(
+                'error checking whether current user is an administrator')
             _delete_parent_lock_admin = True
     return _delete_parent_lock_admin and not _path_in_user_profile(pathname)
 
@@ -284,7 +365,8 @@ def _close_delete_parent_lock():
     global _delete_parent_lock_handle
     global _delete_parent_lock_key
     if _delete_parent_lock_handle is not None:
-        logger.debug('Closing parent lock handle for %s', _delete_parent_lock_key)
+        logger.debug('Closing parent lock handle for %s',
+                     _delete_parent_lock_key)
         win32file.CloseHandle(_delete_parent_lock_handle)
         _delete_parent_lock_handle = None
         _delete_parent_lock_key = None
@@ -357,6 +439,7 @@ def is_handle_valid(h):
         # If GetFileType fails for any reason, the handle is likely invalid
         return False
 
+
 def with_parent_lock(pathname, func, *args, **kwargs):
     """
     Run a function with a lock on the parent directory of pathname.
@@ -372,13 +455,14 @@ def with_parent_lock(pathname, func, *args, **kwargs):
     logger.debug('with_parent_lock(%s): acquiring lock', pathname)
     _lock_delete_parent(pathname)
     logger.debug('lock acquired: calling clean function with parent lock, is_handle_valid(%s)=%s',
-        _delete_parent_lock_key,
-        is_handle_valid(_delete_parent_lock_handle))
+                 _delete_parent_lock_key,
+                 is_handle_valid(_delete_parent_lock_handle))
     try:
         return func(*args, **kwargs)
     except Exception as e:
         _close_delete_parent_lock()
         raise e from e
+
 
 if IS_WINDOWS:
     atexit.register(_close_delete_parent_lock)
@@ -470,7 +554,8 @@ def delete_registry_key(parent_key, really_delete, excludekeys=None):
 
     # If any child is excluded, preserve this parent key
     if has_excluded_children:
-        logger.debug('Preserving parent key with excluded children: %s', parent_key)
+        logger.debug(
+            'Preserving parent key with excluded children: %s', parent_key)
         return False
 
     try:
@@ -503,11 +588,12 @@ def delete_updates():
                         r'%windir%\ie7updates',
                         r'%windir%\ie8updates',
                         # see https://github.com/bleachbit/bleachbit/issues/1215 about catroot2
-                        # r'%windir%\system32\catroot2',
+                        # r'%WindowsSystem%\catroot2',
                         r'%systemdrive%\windows.old',
                         r'%systemdrive%\$windows.~bt',
                         r'%systemdrive%\$windows.~ws']:
-        dirs.append(os.path.expandvars(path_to_add))
+        dirs.extend(os.path.expandvars(p)
+                    for p in expand_windows_system_vars(path_to_add))
 
     # First, delete objects that do not require services to be stopped.
     for path1 in dirs:

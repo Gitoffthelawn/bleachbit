@@ -418,21 +418,22 @@ class System(Cleaner):
                 '$windir\\security\\logs\\*.old',
                 '$windir\\SoftwareDistribution\\*.log',
                 '$windir\\SoftwareDistribution\\DataStore\\Logs\\*',
-                '$windir\\system32\\TZLog.log',
-                '$windir\\system32\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.bak',
-                '$windir\\system32\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.txt',
-                '$windir\\system32\\LogFiles\\AIT\\AitEventLog.etl.???',
-                '$windir\\system32\\LogFiles\\Firewall\\pfirewall.log*',
-                '$windir\\system32\\LogFiles\\Scm\\SCM.EVM*',
-                '$windir\\system32\\LogFiles\\WMI\\Terminal*.etl',
-                '$windir\\system32\\LogFiles\\WMI\\RTBackup\\EtwRT.*etl',
-                '$windir\\system32\\wbem\\Logs\\*.lo_',
-                '$windir\\system32\\wbem\\Logs\\*.log', )
+                '%WindowsSystem%\\TZLog.log',
+                '%WindowsSystem%\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.bak',
+                '%WindowsSystem%\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.txt',
+                '%WindowsSystem%\\LogFiles\\AIT\\AitEventLog.etl.???',
+                '%WindowsSystem%\\LogFiles\\Firewall\\pfirewall.log*',
+                '%WindowsSystem%\\LogFiles\\Scm\\SCM.EVM*',
+                '%WindowsSystem%\\LogFiles\\WMI\\Terminal*.etl',
+                '%WindowsSystem%\\LogFiles\\WMI\\RTBackup\\EtwRT.*etl',
+                '%WindowsSystem%\\wbem\\Logs\\*.lo_',
+                '%WindowsSystem%\\wbem\\Logs\\*.log', )
 
             for path in paths:
-                expanded = os.path.expandvars(path)
-                for globbed in glob.iglob(expanded):
-                    yield Command.Delete(globbed)
+                for expanded in Windows.expand_windows_system_vars(path):
+                    expanded = os.path.expandvars(expanded)
+                    for globbed in glob.iglob(expanded):
+                        yield Command.Delete(globbed)
 
         # memory
         if sys.platform == 'linux' and 'memory' == option_id:

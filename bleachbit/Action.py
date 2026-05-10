@@ -152,13 +152,18 @@ class FileActionProvider(ActionProvider):
         self.paths = []
         # expand special $$foo$$ which may give multiple values
         for path2 in expand_multi_var(raw_path, path_vars):
-            path3 = os.path.expanduser(os.path.expandvars(path2))
-            if os.name == 'nt' and path3:
-                # convert forward slash to backslash for compatibility with getsize()
-                # and for display.  Do not convert an empty path, or it will become
-                # the current directory (.).
-                path3 = os.path.normpath(path3)
-            self.paths.append(path3)
+            if os.name == 'nt':
+                paths = Windows.expand_windows_system_vars(path2)
+            else:
+                paths = (path2, )
+            for path3 in paths:
+                path3 = os.path.expanduser(os.path.expandvars(path3))
+                if os.name == 'nt' and path3:
+                    # convert forward slash to backslash for compatibility with getsize()
+                    # and for display.  Do not convert an empty path, or it will become
+                    # the current directory (.).
+                    path3 = os.path.normpath(path3)
+                self.paths.append(path3)
 
     def get_deep_scan(self):
         if self.ds is None:

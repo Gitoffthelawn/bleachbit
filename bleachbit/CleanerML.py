@@ -113,6 +113,7 @@ def default_vars():
     ret = {}
     if not os.name == 'nt':
         return ret
+    from bleachbit.Windows import get_windows_system_paths
     # Expand ProgramFiles to also be ProgramW6432, etc.
     wowvars = (('ProgramFiles', 'ProgramW6432'),
                ('CommonProgramFiles', 'CommonProgramW6432'))
@@ -121,6 +122,7 @@ def default_vars():
         # Make list unique.
         mylist = list({x for x in (os.getenv(v1), os.getenv(v2)) if x})
         ret[v1] = mylist
+    ret['WindowsSystem'] = get_windows_system_paths()
     return ret
 
 

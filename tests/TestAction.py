@@ -233,6 +233,23 @@ class ActionTestCase(common.BleachbitTestCase):
             actual = expand_multi_var(input_str, variables)
             self.assertSequenceEqual(actual, expected)
 
+    def test_windows_system_var(self):
+        """Unit test for expanding %WindowsSystem% in action paths."""
+        action_xml = (
+            r'<action command="delete" search="file" '
+            r'path="%WindowsSystem%\foo.log"/>'
+        )
+        action_node = parseString(action_xml).childNodes[0]
+        expanded = [r'C:\Windows\Sysnative\foo.log',
+                    r'C:\Windows\SysWOW64\foo.log']
+        with mock.patch('bleachbit.Action.os.name', 'nt'), \
+                mock.patch('bleachbit.Action.Windows', create=True) as mock_windows:
+            mock_windows.expand_windows_system_vars.return_value = expanded
+            action = Delete(action_node)
+        self.assertEqual(expanded, action.paths)
+        mock_windows.expand_windows_system_vars.assert_called_once_with(
+            r'%WindowsSystem%\foo.log')
+
     def test_has_glob(self):
         """Unit test for function has_glob()"""
         tests = ((r'c:\windows\*.log', True),

@@ -26,6 +26,7 @@ Test cases for module CleanerML
 import os
 import shutil
 import sys
+from unittest import mock
 
 # first party imports
 import bleachbit
@@ -35,6 +36,7 @@ from bleachbit.CleanerML import (
     CleanerML,
     boolstr_to_bool,
     create_pot,
+    default_vars,
     list_cleanerml_files,
     load_cleaners,
     pot_fragment)
@@ -87,6 +89,21 @@ class CleanerMLTestCase(common.BleachbitTestCase):
             create_pot()
         finally:
             os.chdir('..')
+
+    def test_default_vars_windows_system(self):
+        """Unit test WindowsSystem in default_vars()"""
+        env = {
+            'WinDir': r'C:\Windows',
+            'ProgramFiles': r'C:\Program Files (x86)',
+            'ProgramW6432': r'C:\Program Files',
+        }
+        with mock.patch('bleachbit.CleanerML.os.name', 'nt'), \
+                mock.patch.dict(os.environ, env, clear=True), \
+                mock.patch('bleachbit.Windows.ARCH_BITS', 32):
+            variables = default_vars()
+        self.assertEqual(
+            [r'C:\Windows\Sysnative', r'C:\Windows\SysWOW64'],
+            variables['WindowsSystem'])
 
     def test_list_cleanerml_files(self):
         """Unit test for list_cleanerml_files()"""
