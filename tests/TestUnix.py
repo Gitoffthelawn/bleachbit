@@ -835,9 +835,7 @@ PrefersNonDefaultGPU=false""")
     @common.skipIfWindows
     def test_get_trash_paths_snap_symlink(self):
         """Do not follow symlinks in ~/snap when finding trash"""
-        old_home = os.environ.get('HOME')
-        os.environ['HOME'] = self.tempdir
-        try:
+        with common.set_temporary_env('HOME', self.tempdir):
             # Create snap structure: snap/app/238/.local/share/Trash/files/
             real_rev = os.path.join(self.tempdir, 'snap', 'app', '238')
             trash_files = os.path.join(
@@ -858,8 +856,3 @@ PrefersNonDefaultGPU=false""")
                 self.tempdir, 'snap', 'app', 'current', '.local', 'share',
                 'Trash', 'files', 'test.txt')
             self.assertNotIn(symlink_path, paths)
-        finally:
-            if old_home is None:
-                os.environ.pop('HOME', None)
-            else:
-                os.environ['HOME'] = old_home

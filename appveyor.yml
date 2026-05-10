@@ -97,7 +97,7 @@ test_script:
   - 'SET DESTRUCTIVE_TESTS=T'
 # Catch warnings as errors. Also set in `tests/common.py`.
   - 'SET PYTHONWARNINGS=error'
-  - '%PYTHON_HOME%\Scripts\coverage.exe run --include="bleachbit/*" tests/TestAll.py'
+  - '%PYTHON_EXE% -m coverage run --include="bleachbit/*" -m tests.TestAll'
   - '%PYTHON_HOME%\Scripts\coverage.exe report'
 
 

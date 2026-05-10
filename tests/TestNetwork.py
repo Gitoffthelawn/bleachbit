@@ -1,22 +1,8 @@
-# vim: ts=4:sw=4:expandtab
-
-# BleachBit
-# Copyright (C) 2008-2025 Andrew Ziem
-# https://www.bleachbit.org
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2008-2026 Andrew Ziem.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+# This work is licensed under the terms of the GNU GPL, version 3 or
+# later.  See the COPYING file in the top-level directory.
 
 """
 Test case for module Network
@@ -36,6 +22,7 @@ import requests
 # first party imports
 import bleachbit
 from tests import common
+from bleachbit import IS_WINDOWS
 from bleachbit.FileUtilities import delete
 from bleachbit.Network import (download_url_to_fn, fetch_url, get_gtk_version,
                                get_ip_for_url, get_user_agent, unset_sslkeylogfile)
@@ -88,13 +75,12 @@ class NetworkTestCase(common.BleachbitTestCase):
     def setUp(self):
         """Set up the test environment before each test method."""
         super().setUp()
-        os.environ['SSLKEYLOGFILE'] = 'ssl.log'
 
     def test_unset_sslkeylogfile(self):
         """Test the function unset_sslkeylogfile()."""
-        # SSLKEYLOGFILE is set in setUp().
-        self.assertEqual(unset_sslkeylogfile(True), os.name == 'nt')
-        self.assertFalse(unset_sslkeylogfile(True))
+        with common.set_temporary_env('SSLKEYLOGFILE', 'ssl.log'):
+            self.assertEqual(unset_sslkeylogfile(True), IS_WINDOWS)
+            self.assertFalse(unset_sslkeylogfile(True))
 
     def test_download_url_to_fn(self):
         """Unit test for function download_url_to_fn()"""

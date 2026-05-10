@@ -90,6 +90,29 @@ def mock_missing_package(*package_names, clear_prefixes=()):
                 sys.modules[mod] = mod_obj
 
 
+@contextlib.contextmanager
+def set_temporary_env(env_var, env_value):
+    """
+    Temporarily overrides an environment variable.
+    """
+    # Save the original value so we can restore it later
+    original_value = os.environ.get(env_var)
+
+    if env_value is None:
+        os.environ.pop(env_var, None)
+    else:
+        os.environ[env_var] = str(env_value)
+    try:
+        yield
+    finally:
+        # Restore the original state
+        if original_value is None:
+            # If the environment variable wasn't set originally, remove it
+            os.environ.pop(env_var, None)
+        else:
+            os.environ[env_var] = original_value
+
+
 class BleachbitTestCase(unittest.TestCase):
     """TestCase class with several convenience methods and asserts"""
     _patchers = []
