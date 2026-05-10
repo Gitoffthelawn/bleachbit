@@ -19,7 +19,7 @@ import subprocess
 
 import bleachbit
 from bleachbit import FileUtilities, General
-from bleachbit.FileUtilities import exe_exists
+from bleachbit.FileUtilities import children_in_directory, exe_exists
 from bleachbit.Language import get_text as _, native_locale_names
 
 logger = logging.getLogger(__name__)
@@ -352,6 +352,26 @@ def get_distribution_name_version():
     return "Linux (unknown version and distribution)"
 
 
+def get_mount_points():
+    """Return read-write mount points that may have trash"""
+    try:
+        import psutil # pylint: disable=import-outside-toplevel
+    except ImportError:
+        logger.warning('install psutil for better trash detection')
+        return []
+    mount_points = []
+    try:
+        for partition in psutil.disk_partitions():
+            mountpoint = partition.mountpoint
+            if re.match(r'^/(proc|sys|dev|run|boot)', mountpoint):
+                continue
+            if 'ro' in partition.opts.split(','):
+                continue
+            mount_points.append(mountpoint)
+    except (OSError, psutil.Error) as e:
+        logger.warning("Error getting mount points: %s", e)
+    return mount_points
+
 def get_purgeable_locales(locales_to_keep):
     """Returns all locales to be purged"""
     if not locales_to_keep:
@@ -375,6 +395,47 @@ def get_purgeable_locales(locales_to_keep):
 
     return frozenset(purgeable_locales)
 
+
+def get_trash_paths():
+    """Iterate over all trash on POSIX systems"""
+    # Import here to avoid a circular import.
+    # pylint: disable=import-outside-toplevel
+    from bleachbit import Command
+    # macOS-style flat trash (non-recursive)
+    dirname = os.path.expanduser("~/.Trash")
+    for filename in children_in_directory(dirname, False):
+        yield Command.Delete(filename)
+    # Freedesktop trash spec directories
+    # https://specifications.freedesktop.org/trash-spec/trashspec-1.0.html
+    home_trash = os.path.join(
+        os.environ.get('XDG_DATA_HOME', os.path.expanduser('~/.local/share')),
+        'Trash')
+    fallback_trash = os.path.expanduser('~/.local/share/Trash')
+    trash_dirs = [home_trash]
+    if home_trash != fallback_trash:
+        trash_dirs.append(fallback_trash)
+    # Snap apps store trash under ~/snap/<app>/<revision>/.local/share/Trash
+    for d in glob.glob(os.path.expanduser("~/snap/*/*/.local/share/Trash")):
+        # Do not follow revision symlinks. For example, current -> 238 would match twice.
+        rev_dir = os.path.dirname(os.path.dirname(os.path.dirname(d)))
+        if not os.path.islink(rev_dir):
+            trash_dirs.append(d)
+    # Per-mountpoint trash (method 1: .Trash/$uid, method 2: .Trash-$uid)
+    uid = os.getuid()
+    for mountpoint in get_mount_points():
+        trash_dirs.append(os.path.join(mountpoint, '.Trash', str(uid)))
+        trash_dirs.append(os.path.join(mountpoint, f'.Trash-{uid}'))
+    # Deduplicate while preserving order
+    seen = set()
+    for trash_dir in trash_dirs:
+        real_path = os.path.realpath(trash_dir)
+        if real_path in seen:
+            continue
+        seen.add(real_path)
+        for subdir in ('files', 'info', 'expunged'):
+            dirname = os.path.join(trash_dir, subdir)
+            for filename in children_in_directory(dirname, True):
+                yield Command.Delete(filename)
 
 def is_unregistered_mime(mimetype):
     """Returns True if the MIME type is known to be unregistered. If

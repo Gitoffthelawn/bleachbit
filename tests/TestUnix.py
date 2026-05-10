@@ -34,6 +34,7 @@ from bleachbit.Unix import (
     get_distribution_name_version_platform_freedesktop,
     get_distribution_name_version,
     get_purgeable_locales,
+    get_trash_paths,
     is_broken_xdg_desktop,
     is_unix_display_protocol_wayland,
     journald_clean,
@@ -307,6 +308,17 @@ NoDisplay=false
 PrefersNonDefaultGPU=false""")
             tmp.flush()
             self.assertFalse(is_broken_xdg_desktop(tmp.name))
+
+
+    @common.skipIfWindows
+    def test_get_trash_paths(self):
+        """Unit test for get_trash_paths()"""
+        seen = []
+        for p in get_trash_paths():
+            seen.append(p)
+            self.assertExists(p.path)
+        self.assertEqual(len(seen), len(set(p.path for p in seen)), "Duplicate trash paths found")
+
 
     @common.skipIfWindows
     def test_desktop_valid_exe(self):
@@ -819,3 +831,35 @@ PrefersNonDefaultGPU=false""")
                 root_autorized = root_is_not_allowed_to_X_session()
             self.assertIsInstance(root_autorized, bool)
             self.assertEqual(expected_root_autorized, root_autorized)
+
+    @common.skipIfWindows
+    def test_get_trash_paths_snap_symlink(self):
+        """Do not follow symlinks in ~/snap when finding trash"""
+        old_home = os.environ.get('HOME')
+        os.environ['HOME'] = self.tempdir
+        try:
+            # Create snap structure: snap/app/238/.local/share/Trash/files/
+            real_rev = os.path.join(self.tempdir, 'snap', 'app', '238')
+            trash_files = os.path.join(
+                real_rev, '.local', 'share', 'Trash', 'files')
+            os.makedirs(trash_files)
+            test_file = os.path.join(trash_files, 'test.txt')
+            with open(test_file, 'w') as f:
+                f.write('test')
+            # Create symlink current -> 238
+            current_dir = os.path.join(self.tempdir, 'snap', 'app', 'current')
+            os.symlink('238', current_dir)
+
+            paths = [cmd.path for cmd in get_trash_paths()]
+            # Should find the test file through the real path
+            self.assertIn(test_file, paths)
+            # Should NOT find it through the symlink
+            symlink_path = os.path.join(
+                self.tempdir, 'snap', 'app', 'current', '.local', 'share',
+                'Trash', 'files', 'test.txt')
+            self.assertNotIn(symlink_path, paths)
+        finally:
+            if old_home is None:
+                os.environ.pop('HOME', None)
+            else:
+                os.environ['HOME'] = old_home
