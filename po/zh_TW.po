@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bleachbit\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: andrew@bleachbit.org\n"
 "POT-Creation-Date: 2026-05-11 08:56-0600\n"
-"PO-Revision-Date: 2026-04-07 15:09+0000\n"
+"PO-Revision-Date: 2026-05-12 16:11+0000\n"
 "Last-Translator: Pin-Hsien Lee <plesry@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/bleachbit/main/zh_Hant/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.5-dev\n"
 "X-Launchpad-Export-Date: 2021-10-29 20:32+0000\n"
 
 #: ../cleaners/realplayer.xml ../cleaners/windows_media_player.xml
@@ -682,18 +682,16 @@ msgstr "自訂資料夾將被重置。"
 #. Label for Claude coding assistant
 #: ../cleaners/claude.xml
 msgid "AI assistant"
-msgstr ""
+msgstr "AI 助理"
 
 #. Description for deleting Claude Code sessions
 #: ../cleaners/claude.xml
-#, fuzzy
-#| msgid "Delete the command history"
 msgid "Delete the conversation history"
-msgstr "刪除指令紀錄"
+msgstr "刪除對話歷史紀錄"
 
 #: ../cleaners/claude.xml
 msgid "You would lose resume, continue, and rewind for past sessions"
-msgstr ""
+msgstr "您會失去以往對話的恢復、繼續和回退"
 
 #: ../cleaners/deepscan.xml
 msgid "Deep scan"
@@ -750,13 +748,11 @@ msgstr "刪除瀏覽網頁清單"
 #. Cleaning option that deletes AI models in a web browser
 #: ../cleaners/google_chrome.xml
 msgid "AI"
-msgstr ""
+msgstr "AI"
 
 #: ../cleaners/google_chrome.xml
-#, fuzzy
-#| msgid "Delete the logs"
 msgid "Delete the AI models"
-msgstr "刪除日誌"
+msgstr "刪除 AI 模型"
 
 #. Torrent software can block a list of IP addresses, such as those that may belong to malware or anti-piracy organizations
 #: ../cleaners/transmission.xml
@@ -1865,7 +1861,7 @@ msgstr "選擇目的資料夾"
 #: ../bleachbit/GuiChaff.py
 #, python-brace-format
 msgid "Error generating chaff: {error}"
-msgstr ""
+msgstr "生成干擾文件時出錯：{error}"
 
 #. TRANSLATORS: Progress message shown while deleting chaff files.
 #. 'Deleting files' is a present participle.
@@ -1880,14 +1876,14 @@ msgstr "正在刪除檔案…"
 #: ../bleachbit/GuiChaff.py
 #, python-brace-format
 msgid "Error deleting chaff files: {error}"
-msgstr ""
+msgstr "刪除干擾文件時出錯：{error}"
 
 #. TRANSLATORS: Title for dialog window.
 #. Digital chaff is like physical chaff that airplanes use to protect themselves
 #. from radar-guided missiles. For more explanation, see the online documentation.
 #: ../bleachbit/GuiChaff.py
 msgid "Make chaff"
-msgstr "製造僞文件"
+msgstr "生成干擾文件"
 
 #. TRANSLATORS: Label at the top of the chaff dialog
 #: ../bleachbit/GuiChaff.py
@@ -2379,15 +2375,10 @@ msgstr "添加資料夾"
 #. in the preferences dialog. This message appears when cleaning options
 #. with warnings are selected but expert mode is disabled.
 #: ../bleachbit/GuiStartup.py
-#, fuzzy
-#| msgid ""
-#| "Cleaning options with warnings now require expert mode. Enable it in "
-#| "preferences to clean them."
 msgid ""
 "One or more selected cleaning options have warnings and require Expert Mode "
 "to clean. Enable it in preferences."
-msgstr ""
-"帶有警吿的清理選項現在需要專家模式。請在偏好設定中啟用該模式以進行清理。"
+msgstr "一或多個選中的清理選項有警告，需要專家模式。可在偏好設定中啟用它。"
 
 #. TRANSLATORS: "Expert Mode" is the name of a feature/setting found in
 #. Preferences. Keep it consistent with the translation of "Expert Mode"
@@ -2397,7 +2388,7 @@ msgstr ""
 msgid ""
 "Delete confirmation is disabled but expert mode is not enabled. Enable "
 "Expert Mode in preferences to skip delete confirmations."
-msgstr ""
+msgstr "禁用了刪除確認但專家模式未開啟。在偏好設定中啟用專家模式跳過刪除確認。"
 
 #. TRANSLATORS: First-start hint for Linux users shown in
 #. the log on the main screen.
@@ -3037,7 +3028,7 @@ msgstr "擦除未分配空間(_W)"
 
 #: ../share/app-menu.ui
 msgid "_Make Chaff"
-msgstr "製造僞文件 (_M)"
+msgstr "製造干擾文件 (_M)"
 
 #: ../share/app-menu.ui
 msgid "S_hred Settings and Quit"
