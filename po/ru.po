@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bleachbit\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: andrew@bleachbit.org\n"
 "POT-Creation-Date: 2026-05-11 08:56-0600\n"
-"PO-Revision-Date: 2026-04-28 15:09+0000\n"
+"PO-Revision-Date: 2026-05-12 16:11+0000\n"
 "Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/bleachbit/main/"
 "ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.5-dev\n"
 "X-Launchpad-Export-Date: 2021-10-29 20:32+0000\n"
 
 #: ../cleaners/realplayer.xml ../cleaners/windows_media_player.xml
@@ -704,18 +704,18 @@ msgstr "Выбранные папки будут сброшены."
 #. Label for Claude coding assistant
 #: ../cleaners/claude.xml
 msgid "AI assistant"
-msgstr ""
+msgstr "ИИ-помощник"
 
 #. Description for deleting Claude Code sessions
 #: ../cleaners/claude.xml
-#, fuzzy
-#| msgid "Delete the command history"
 msgid "Delete the conversation history"
-msgstr "Удалить журнал команд"
+msgstr "Удалить историю разговоров"
 
 #: ../cleaners/claude.xml
 msgid "You would lose resume, continue, and rewind for past sessions"
 msgstr ""
+"Вы бы потеряли возобновление, продолжение и перемотку назад для прошлых "
+"сеансов"
 
 #: ../cleaners/deepscan.xml
 msgid "Deep scan"
@@ -774,13 +774,11 @@ msgstr "Удалить список посещённых веб-страниц"
 #. Cleaning option that deletes AI models in a web browser
 #: ../cleaners/google_chrome.xml
 msgid "AI"
-msgstr ""
+msgstr "ИИ"
 
 #: ../cleaners/google_chrome.xml
-#, fuzzy
-#| msgid "Delete the logs"
 msgid "Delete the AI models"
-msgstr "Удалить журналы"
+msgstr "Удалить модели ИИ"
 
 #. Torrent software can block a list of IP addresses, such as those that may belong to malware or anti-piracy organizations
 #: ../cleaners/transmission.xml
@@ -1945,7 +1943,7 @@ msgstr "Выберите папку сохранения"
 #: ../bleachbit/GuiChaff.py
 #, python-brace-format
 msgid "Error generating chaff: {error}"
-msgstr ""
+msgstr "Ошибка при создании chaff: {error}"
 
 #. TRANSLATORS: Progress message shown while deleting chaff files.
 #. 'Deleting files' is a present participle.
@@ -1960,7 +1958,7 @@ msgstr "Удаление файлов…"
 #: ../bleachbit/GuiChaff.py
 #, python-brace-format
 msgid "Error deleting chaff files: {error}"
-msgstr ""
+msgstr "Ошибка удаления файлов chaff: {error}"
 
 #. TRANSLATORS: Title for dialog window.
 #. Digital chaff is like physical chaff that airplanes use to protect themselves
@@ -2471,16 +2469,13 @@ msgstr "Добавить каталог"
 #. in the preferences dialog. This message appears when cleaning options
 #. with warnings are selected but expert mode is disabled.
 #: ../bleachbit/GuiStartup.py
-#, fuzzy
-#| msgid ""
-#| "Cleaning options with warnings now require expert mode. Enable it in "
-#| "preferences to clean them."
 msgid ""
 "One or more selected cleaning options have warnings and require Expert Mode "
 "to clean. Enable it in preferences."
 msgstr ""
-"Параметры очистки с предупреждениями теперь требуют режима эксперта. "
-"Включите в настройках, чтобы очищать их."
+"Один или несколько выбранных параметров очистки содержат предупреждения и "
+"требуют, чтобы для очистки использовался экспертный режим. Включите его в "
+"настройках."
 
 #. TRANSLATORS: "Expert Mode" is the name of a feature/setting found in
 #. Preferences. Keep it consistent with the translation of "Expert Mode"
@@ -2491,6 +2486,8 @@ msgid ""
 "Delete confirmation is disabled but expert mode is not enabled. Enable "
 "Expert Mode in preferences to skip delete confirmations."
 msgstr ""
+"Подтверждение удаления отключено, но режим эксперта не включён. Включите "
+"режим эксперта в настройках, чтобы пропустить подтверждения удаления."
 
 #. TRANSLATORS: First-start hint for Linux users shown in
 #. the log on the main screen.
