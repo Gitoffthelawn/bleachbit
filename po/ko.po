@@ -6,12 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bleachbit\n"
-"Report-Msgid-Bugs-To: andrew@bleachbit.org\n"
-"POT-Creation-Date: 2026-04-05 14:48-0600\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-11 08:56-0600\n"
 "PO-Revision-Date: 2026-04-11 12:09+0000\n"
 "Last-Translator: VenusGirl <VenusGirl@outlook.com>\n"
-"Language-Team: Korean <https://hosted.weblate.org/projects/bleachbit/main/"
-"ko/>\n"
+"Language-Team: Korean <https://hosted.weblate.org/projects/bleachbit/main/ko/"
+">\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,10 +79,11 @@ msgstr "사용 기록 삭제"
 #: ../cleaners/yahoo_messenger.xml ../cleaners/easytag.xml
 #: ../cleaners/warzone2100.xml ../cleaners/gpodder.xml ../cleaners/exaile.xml
 #: ../cleaners/windows_defender.xml ../cleaners/smartftp.xml
-#: ../cleaners/hippo_opensim_viewer.xml ../cleaners/zoom.xml
-#: ../cleaners/teamviewer.xml ../cleaners/internet_explorer.xml
-#: ../cleaners/screenlets.xml ../cleaners/gftp.xml ../cleaners/amule.xml
-#: ../cleaners/vuze.xml ../bleachbit/Cleaner.py
+#: ../cleaners/vscode.xml ../cleaners/hippo_opensim_viewer.xml
+#: ../cleaners/claude.xml ../cleaners/zoom.xml ../cleaners/teamviewer.xml
+#: ../cleaners/internet_explorer.xml ../cleaners/screenlets.xml
+#: ../cleaners/gftp.xml ../cleaners/amule.xml ../cleaners/vuze.xml
+#: ../bleachbit/Cleaner.py
 msgid "Logs"
 msgstr "로그"
 
@@ -90,10 +91,11 @@ msgstr "로그"
 #: ../cleaners/yahoo_messenger.xml ../cleaners/warzone2100.xml
 #: ../cleaners/gpodder.xml ../cleaners/exaile.xml
 #: ../cleaners/windows_defender.xml ../cleaners/smartftp.xml
-#: ../cleaners/hippo_opensim_viewer.xml ../cleaners/zoom.xml
-#: ../cleaners/teamviewer.xml ../cleaners/internet_explorer.xml
-#: ../cleaners/screenlets.xml ../cleaners/gftp.xml ../cleaners/amule.xml
-#: ../cleaners/vuze.xml ../bleachbit/Cleaner.py
+#: ../cleaners/vscode.xml ../cleaners/hippo_opensim_viewer.xml
+#: ../cleaners/claude.xml ../cleaners/zoom.xml ../cleaners/teamviewer.xml
+#: ../cleaners/internet_explorer.xml ../cleaners/screenlets.xml
+#: ../cleaners/gftp.xml ../cleaners/amule.xml ../cleaners/vuze.xml
+#: ../bleachbit/Cleaner.py
 msgid "Delete the logs"
 msgstr "로그 삭제"
 
@@ -113,13 +115,14 @@ msgstr "멀티미디어 뷰어"
 #: ../cleaners/thumbnails.xml ../cleaners/exaile.xml ../cleaners/chromium.xml
 #: ../cleaners/slack.xml ../cleaners/smartftp.xml ../cleaners/thunderbird.xml
 #: ../cleaners/palemoon.xml ../cleaners/firefox.xml ../cleaners/liferea.xml
-#: ../cleaners/hippo_opensim_viewer.xml ../cleaners/adobe_reader.xml
-#: ../cleaners/brave.xml ../cleaners/zoom.xml ../cleaners/evolution.xml
-#: ../cleaners/seamonkey.xml ../cleaners/flash.xml
-#: ../cleaners/google_chrome.xml ../cleaners/tremulous.xml
-#: ../cleaners/internet_explorer.xml ../cleaners/microsoft_edge.xml
-#: ../cleaners/gftp.xml ../cleaners/kde.xml ../cleaners/vuze.xml
-#: ../cleaners/opera.xml ../cleaners/discord.xml ../bleachbit/Cleaner.py
+#: ../cleaners/vscode.xml ../cleaners/hippo_opensim_viewer.xml
+#: ../cleaners/adobe_reader.xml ../cleaners/brave.xml ../cleaners/claude.xml
+#: ../cleaners/zoom.xml ../cleaners/evolution.xml ../cleaners/seamonkey.xml
+#: ../cleaners/flash.xml ../cleaners/google_chrome.xml
+#: ../cleaners/tremulous.xml ../cleaners/internet_explorer.xml
+#: ../cleaners/microsoft_edge.xml ../cleaners/gftp.xml ../cleaners/kde.xml
+#: ../cleaners/vuze.xml ../cleaners/opera.xml ../cleaners/discord.xml
+#: ../bleachbit/Cleaner.py
 msgid "Cache"
 msgstr "캐시"
 
@@ -135,8 +138,9 @@ msgstr "캐시"
 #: ../cleaners/thumbnails.xml ../cleaners/exaile.xml
 #: ../cleaners/windows_explorer.xml ../cleaners/smartftp.xml
 #: ../cleaners/apt.xml ../cleaners/palemoon.xml ../cleaners/firefox.xml
-#: ../cleaners/liferea.xml ../cleaners/hippo_opensim_viewer.xml
-#: ../cleaners/adobe_reader.xml ../cleaners/zoom.xml ../cleaners/evolution.xml
+#: ../cleaners/liferea.xml ../cleaners/vscode.xml
+#: ../cleaners/hippo_opensim_viewer.xml ../cleaners/adobe_reader.xml
+#: ../cleaners/claude.xml ../cleaners/zoom.xml ../cleaners/evolution.xml
 #: ../cleaners/flash.xml ../cleaners/internet_explorer.xml ../cleaners/gftp.xml
 #: ../cleaners/kde.xml ../cleaners/vuze.xml ../bleachbit/Cleaner.py
 msgid "Delete the cache"
@@ -205,15 +209,15 @@ msgstr "웹 브라우저"
 
 #: ../cleaners/librewolf.xml ../cleaners/waterfox.xml ../cleaners/zen.xml
 #: ../cleaners/windows_defender.xml ../cleaners/palemoon.xml
-#: ../cleaners/firefox.xml ../cleaners/deepscan.xml ../cleaners/amule.xml
-#: ../cleaners/vuze.xml
+#: ../cleaners/firefox.xml ../cleaners/vscode.xml ../cleaners/claude.xml
+#: ../cleaners/deepscan.xml ../cleaners/amule.xml ../cleaners/vuze.xml
 msgid "Backup files"
 msgstr "파일 백업"
 
 #: ../cleaners/librewolf.xml ../cleaners/waterfox.xml ../cleaners/zen.xml
 #: ../cleaners/windows_defender.xml ../cleaners/palemoon.xml
-#: ../cleaners/firefox.xml ../cleaners/deepscan.xml ../cleaners/amule.xml
-#: ../cleaners/vuze.xml
+#: ../cleaners/firefox.xml ../cleaners/vscode.xml ../cleaners/claude.xml
+#: ../cleaners/deepscan.xml ../cleaners/amule.xml ../cleaners/vuze.xml
 msgid "Delete the backup files"
 msgstr "백업 파일 삭제"
 
@@ -276,8 +280,9 @@ msgstr "이 옵션은 저장한 암호를 삭제합니다."
 
 #: ../cleaners/librewolf.xml ../cleaners/vivaldi.xml ../cleaners/waterfox.xml
 #: ../cleaners/zen.xml ../cleaners/chromium.xml ../cleaners/palemoon.xml
-#: ../cleaners/firefox.xml ../cleaners/brave.xml ../cleaners/google_chrome.xml
-#: ../cleaners/microsoft_edge.xml ../cleaners/opera.xml
+#: ../cleaners/firefox.xml ../cleaners/brave.xml ../cleaners/claude.xml
+#: ../cleaners/google_chrome.xml ../cleaners/microsoft_edge.xml
+#: ../cleaners/opera.xml
 msgid "Session"
 msgstr "세션"
 
@@ -396,16 +401,18 @@ msgstr "명령어 기록 삭제"
 #: ../cleaners/bash.xml ../cleaners/google_earth.xml ../cleaners/wine.xml
 #: ../cleaners/silverlight.xml ../cleaners/windows_defender.xml
 #: ../cleaners/winetricks.xml ../cleaners/gimp.xml ../cleaners/adobe_reader.xml
-#: ../cleaners/deepscan.xml ../cleaners/winrar.xml ../cleaners/amule.xml
-#: ../cleaners/kde.xml ../cleaners/vuze.xml ../bleachbit/Cleaner.py
+#: ../cleaners/claude.xml ../cleaners/deepscan.xml ../cleaners/winrar.xml
+#: ../cleaners/amule.xml ../cleaners/kde.xml ../cleaners/vuze.xml
+#: ../bleachbit/Cleaner.py
 msgid "Temporary files"
 msgstr "임시 파일"
 
 #: ../cleaners/bash.xml ../cleaners/google_earth.xml ../cleaners/wine.xml
 #: ../cleaners/silverlight.xml ../cleaners/windows_defender.xml
 #: ../cleaners/winetricks.xml ../cleaners/gimp.xml ../cleaners/adobe_reader.xml
-#: ../cleaners/deepscan.xml ../cleaners/winrar.xml ../cleaners/amule.xml
-#: ../cleaners/kde.xml ../cleaners/vuze.xml ../bleachbit/Cleaner.py
+#: ../cleaners/claude.xml ../cleaners/deepscan.xml ../cleaners/winrar.xml
+#: ../cleaners/amule.xml ../cleaners/kde.xml ../cleaners/vuze.xml
+#: ../bleachbit/Cleaner.py
 msgid "Delete the temporary files"
 msgstr "임시 파일 삭제"
 
@@ -645,6 +652,11 @@ msgstr "더 이상 사용하지 않는 파일 삭제"
 msgid "Package lists"
 msgstr "패키지 목록"
 
+#. Cleaner description for vim, VS Code, etc.
+#: ../cleaners/vscode.xml ../cleaners/gedit.xml ../cleaners/vim.xml
+msgid "Editor"
+msgstr "편집기"
+
 #: ../cleaners/x11.xml
 msgid "Windowing system"
 msgstr "윈도잉 시스템"
@@ -669,6 +681,22 @@ msgstr "문서 뷰어"
 msgid "Custom folders will be reset."
 msgstr "커스텀 폴더가 재설정됩니다."
 
+#. Label for Claude coding assistant
+#: ../cleaners/claude.xml
+msgid "AI assistant"
+msgstr ""
+
+#. Description for deleting Claude Code sessions
+#: ../cleaners/claude.xml
+#, fuzzy
+#| msgid "Delete the command history"
+msgid "Delete the conversation history"
+msgstr "명령어 기록 삭제"
+
+#: ../cleaners/claude.xml
+msgid "You would lose resume, continue, and rewind for past sessions"
+msgstr ""
+
 #: ../cleaners/deepscan.xml
 msgid "Deep scan"
 msgstr "정밀 검사"
@@ -688,10 +716,6 @@ msgstr "사용자 프로필 아래 VIM 스왑 파일"
 #: ../cleaners/deepscan.xml
 msgid "VIM swap files across system"
 msgstr "시스템 전체 VIM 스왑 파일"
-
-#: ../cleaners/gedit.xml ../cleaners/vim.xml
-msgid "Editor"
-msgstr "편집기"
 
 #: ../cleaners/zoom.xml
 msgid "Recordings"
@@ -724,6 +748,17 @@ msgstr "다운로드한 파일 목록"
 #: ../cleaners/seamonkey.xml
 msgid "Delete the list of visited web pages"
 msgstr "방문한 웹 페이지 목록 삭제"
+
+#. Cleaning option that deletes AI models in a web browser
+#: ../cleaners/google_chrome.xml
+msgid "AI"
+msgstr ""
+
+#: ../cleaners/google_chrome.xml
+#, fuzzy
+#| msgid "Delete the logs"
+msgid "Delete the AI models"
+msgstr "로그 삭제"
 
 #. Torrent software can block a list of IP addresses, such as those that may belong to malware or anti-piracy organizations
 #: ../cleaners/transmission.xml
@@ -812,10 +847,10 @@ msgid ""
 "and system logs. It can also shred files and clean free disk space to "
 "prevent data recovery."
 msgstr ""
-"BleachBit는 캐시, 쿠키, 브라우저 기록, 임시 파일, 시스템 로그와 같은 "
-"불필요한 파일을 신속하게 제거하여 디스크 공간을 확보하고 개인정보 보호를 "
-"유지합니다. 또한 파일을 파쇄하고 여유 디스크 공간을 정리하여 데이터 복구를 "
-"방지할 수 있습니다."
+"BleachBit는 캐시, 쿠키, 브라우저 기록, 임시 파일, 시스템 로그와 같은 불필요"
+"한 파일을 신속하게 제거하여 디스크 공간을 확보하고 개인정보 보호를 유지합니"
+"다. 또한 파일을 파쇄하고 여유 디스크 공간을 정리하여 데이터 복구를 방지할 수 "
+"있습니다."
 
 #. TRANSLATORS: Caption for screenshot
 #: ../org.bleachbit.BleachBit.metainfo.xml
@@ -831,8 +866,8 @@ msgid ""
 "to abort the upgrade."
 msgstr ""
 "${prodname}이(가) 이미 설치되어 있습니다.\n"
-"업그레이드하기 전에 이전 버전을 제거하려면 '확인'을 클릭하고, 업그레이드를 "
-"중단하려면 '취소'를 클릭하세요."
+"업그레이드하기 전에 이전 버전을 제거하려면 '확인'을 클릭하고, 업그레이드를 중"
+"단하려면 '취소'를 클릭하세요."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:BLEACHBIT_MUI_FINISHPAGE_LINK"
@@ -935,8 +970,8 @@ msgctxt "nsis:MULTIUSER_INSTALL_HEADER"
 msgid ""
 "Select whether to install $(^NameDA) for all users or for the current user."
 msgstr ""
-"모든 사용자를 위해 $(^NameDA)를 설치할지 현재 사용자를 위해 설치할지 "
-"선택합니다."
+"모든 사용자를 위해 $(^NameDA)를 설치할지 현재 사용자를 위해 설치할지 선택합니"
+"다."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:MULTIUSER_INSTALL_PAGE_SUBTITLE"
@@ -978,14 +1013,16 @@ msgstr "사용자 선택"
 msgctxt "nsis:MULTIUSER_REINSTALL_DIFF_VERSION_ALL_USERS"
 msgid ""
 "Uninstall version {OLD_VERSION} and install version {VERSION} for all users."
-msgstr "모든 사용자에 대해 버전 {OLD_VERSION}을 제거하고 버전 {VERSION}을 설치합니다."
+msgstr ""
+"모든 사용자에 대해 버전 {OLD_VERSION}을 제거하고 버전 {VERSION}을 설치합니다."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:MULTIUSER_REINSTALL_DIFF_VERSION_CURRENT_USER"
 msgid ""
 "Uninstall version {OLD_VERSION} and install version {VERSION} for the "
 "current user."
-msgstr "현재 사용자에 대해 버전 {OLD_VERSION}을 제거하고 버전 {VERSION}을 설치합니다."
+msgstr ""
+"현재 사용자에 대해 버전 {OLD_VERSION}을 제거하고 버전 {VERSION}을 설치합니다."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:MULTIUSER_REINSTALL_SAME_VERSION_ALL_USERS"
@@ -1043,8 +1080,8 @@ msgctxt "nsis:SECTION_INTEGRATE_SHRED_DESCRIPTION"
 msgid ""
 "Add an option to delete files from the file context menu in Windows Explorer."
 msgstr ""
-"Windows 탐색기의 파일 컨텍스트 메뉴에서 파일을 삭제할 수 있는 옵션을 "
-"추가합니다."
+"Windows 탐색기의 파일 컨텍스트 메뉴에서 파일을 삭제할 수 있는 옵션을 추가합니"
+"다."
 
 #: windows/NsisInclude/NsisMultiUserLang.nsh
 msgctxt "nsis:SECTION_INTEGRATE_SHRED_NAME"
@@ -1130,8 +1167,8 @@ msgid ""
 msgstr ""
 "{prodname}이(가) 다음 폴더에서 제거됩니다.\n"
 "제거를 클릭하여 제거를 시작합니다.\n"
-"경고: 제거 프로그램은 사용자가 추가하거나 변경한 파일( 예: 사용자 지정 "
-"클리너)을 포함하여 설치 디렉터리를 완전히 제거합니다."
+"경고: 제거 프로그램은 사용자가 추가하거나 변경한 파일( 예: 사용자 지정 클리"
+"너)을 포함하여 설치 디렉터리를 완전히 제거합니다."
 
 #. TRANSLATORS: Multi-value variables are explained
 #. in the online documentation. Basically, they are like
@@ -1524,8 +1561,8 @@ msgid ""
 "At least one file was locked by another process, so its contents could not "
 "be overwritten. It will be marked for deletion upon system reboot."
 msgstr ""
-"적어도 하나의 파일이 다른 프로세스에 의해 잠겨 있어서 내용을 덮어쓸 수 "
-"없었습니다. 시스템 재부팅 시 삭제 표시가 됩니다."
+"적어도 하나의 파일이 다른 프로세스에 의해 잠겨 있어서 내용을 덮어쓸 수 없었습"
+"니다. 시스템 재부팅 시 삭제 표시가 됩니다."
 
 #. TRANSLATORS: Label in the log when the file will be deleted
 #. when the system reboots. 'Mark' is a verb.
@@ -1568,18 +1605,19 @@ msgid ""
 "on traditional hard drives. On solid-state drives, it is less reliable, and "
 "frequent use contributes to wear."
 msgstr ""
-"빈 공간을 지우면 삭제되지 않은 파일의 흔적은 제거되지만 추가 디스크 공간은 "
-"확보되지 않습니다. 이 프로세스는 매우 오랜 시간이 걸릴 수 있으며 일시적으로 "
-"컴퓨터 속도가 느려질 수 있습니다. 드라이브가 전체 디스크 암호화로 보호되는 "
-"경우에는 그럴 필요가 없습니다. 이 방법은 기존 하드 드라이브에서 가장 잘 "
-"작동합니다. 솔리드 스테이트 드라이브에서는 신뢰성이 떨어지고 자주 사용하면 "
-"마모가 발생합니다."
+"빈 공간을 지우면 삭제되지 않은 파일의 흔적은 제거되지만 추가 디스크 공간은 확"
+"보되지 않습니다. 이 프로세스는 매우 오랜 시간이 걸릴 수 있으며 일시적으로 컴"
+"퓨터 속도가 느려질 수 있습니다. 드라이브가 전체 디스크 암호화로 보호되는 경우"
+"에는 그럴 필요가 없습니다. 이 방법은 기존 하드 드라이브에서 가장 잘 작동합니"
+"다. 솔리드 스테이트 드라이브에서는 신뢰성이 떨어지고 자주 사용하면 마모가 발"
+"생합니다."
 
 #. TRANSLATORS: Error message shown in the infobar or notice shown in a tooltip.
 #. Expert mode is an option in the preferences to relax guardrails.
 #: ../bleachbit/Constant.py
 msgid "This option requires expert mode. Enable it in Preferences."
-msgstr "이 옵션은 전문가 모드가 필요합니다. 기본 설정에서 이 옵션을 활성화합니다."
+msgstr ""
+"이 옵션은 전문가 모드가 필요합니다. 기본 설정에서 이 옵션을 활성화합니다."
 
 #. TRANSLATORS: Log message where %s is the pathname.
 #: ../bleachbit/FileUtilities.py
@@ -1852,6 +1890,13 @@ msgstr "디스크 여유 공간"
 msgid "Select destination folder"
 msgstr "대상 폴더 선택"
 
+#. TRANSLATORS: Error message shown when chaff file generation fails.
+#. The placeholder is for the technical error details.
+#: ../bleachbit/GuiChaff.py
+#, python-brace-format
+msgid "Error generating chaff: {error}"
+msgstr ""
+
 #. TRANSLATORS: Progress message shown while deleting chaff files.
 #. 'Deleting files' is a present participle.
 #. To indicate an ongoing operation, include the ellipsis as literal
@@ -1861,6 +1906,13 @@ msgstr "대상 폴더 선택"
 #| msgid "Deleting files"
 msgid "Deleting files…"
 msgstr "파일 삭제 중"
+
+#. TRANSLATORS: Error message shown when deleting chaff files fails.
+#. The placeholder is for the technical error details.
+#: ../bleachbit/GuiChaff.py
+#, python-brace-format
+msgid "Error deleting chaff files: {error}"
+msgstr ""
 
 #. TRANSLATORS: Title for dialog window.
 #. Digital chaff is like physical chaff that airplanes use to protect themselves
@@ -2243,7 +2295,8 @@ msgstr "디버그 메시지 표시"
 #. is a folder anywhere on C:.
 #: ../bleachbit/GuiPreferences.py
 msgid "Choose a writable folder for each drive for which to wipe empty space."
-msgstr "빈 공간을 지우기 위해 각 드라이브마다 쓰기가 가능한 폴더를 선택하십시오."
+msgstr ""
+"빈 공간을 지우기 위해 각 드라이브마다 쓰기가 가능한 폴더를 선택하십시오."
 
 #. TRANSLATORS: In the preferences dialog, this button adds a path to
 #. the list of paths
@@ -2306,8 +2359,8 @@ msgstr "이 경로는 이미 사용자 지정 목록에 존재합니다."
 #: ../bleachbit/GuiPreferences.py
 msgid "This path is protected. To bypass protection, enable expert mode."
 msgstr ""
-"이 경로는 보호되어 있습니다. 보호를 무시하고 진행하려면 전문가 모드를 "
-"켜주세요."
+"이 경로는 보호되어 있습니다. 보호를 무시하고 진행하려면 전문가 모드를 켜주세"
+"요."
 
 #. TRANSLATORS: Title of warning dialog shown when adding a protected path.
 #: ../bleachbit/GuiPreferences.py
@@ -2377,15 +2430,31 @@ msgctxt "button"
 msgid "Add folder"
 msgstr "폴더 추가"
 
-#. TRANSLATORS: Update notification for users upgrading from versions
-#. older than 5.1.0.
+#. TRANSLATORS: "Expert Mode" is the name of a feature/setting found in
+#. Preferences. Keep it consistent with the translation of "Expert Mode"
+#. in the preferences dialog. This message appears when cleaning options
+#. with warnings are selected but expert mode is disabled.
+#: ../bleachbit/GuiStartup.py
+#, fuzzy
+#| msgid ""
+#| "Cleaning options with warnings now require expert mode. Enable it in "
+#| "preferences to clean them."
+msgid ""
+"One or more selected cleaning options have warnings and require Expert Mode "
+"to clean. Enable it in preferences."
+msgstr ""
+"경고가 있는 청소 옵션을 사용하려면 이제 전문가 모드가 필요합니다. 해당 항목"
+"을 청소하려면 환경 설정에서 전문가 모드를 켜주세요."
+
+#. TRANSLATORS: "Expert Mode" is the name of a feature/setting found in
+#. Preferences. Keep it consistent with the translation of "Expert Mode"
+#. in the preferences dialog. This message appears when the user tries to
+#. skip a delete confirmation without enabling Expert Mode.
 #: ../bleachbit/GuiStartup.py
 msgid ""
-"Cleaning options with warnings now require expert mode. Enable it in "
-"preferences to clean them."
+"Delete confirmation is disabled but expert mode is not enabled. Enable "
+"Expert Mode in preferences to skip delete confirmations."
 msgstr ""
-"경고가 있는 청소 옵션을 사용하려면 이제 전문가 모드가 필요합니다. 해당 "
-"항목을 청소하려면 환경 설정에서 전문가 모드를 켜주세요."
 
 #. TRANSLATORS: First-start hint for Linux users shown in
 #. the log on the main screen.
