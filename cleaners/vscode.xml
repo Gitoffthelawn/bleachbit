@@ -8,7 +8,7 @@ later.  See the COPYING file in the top-level directory.
 -->
 <cleaner id="vscode" os="linux">
   <label>Visual Studio Code</label>
-  <description>Editor</description>
+  <description translators="Cleaner description for vim, VS Code, etc.">Editor</description>
   <running type="exe" os="linux" same_user="true">code</running>
   <running type="exe" os="linux" same_user="true">codeium</running>
   <running type="exe" os="linux" same_user="true">windsurf</running>

@@ -28,8 +28,8 @@ later.  See the COPYING file in the top-level directory.
     <value os="linux">~/.var/app/com.google.ChromeDev/config/google-chrome/Default</value>
   </var>
   <option id="ai">
-    <label>AI</label>
-    <description>Delete AI models and related data</description>
+    <label translators="Cleaning option that deletes AI models in a web browser">AI</label>
+    <description>Delete the AI models</description>
     <action command="delete" search="walk.all" path="$$base$$/OnDeviceHeadSuggestModel"/>
     <action command="delete" search="walk.all" path="$$base$$/OptGuideOnDeviceModel"/>
     <action command="delete" search="walk.all" path="$$profile$$/OptGuideOnDeviceModel"/>
