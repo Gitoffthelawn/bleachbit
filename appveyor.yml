@@ -50,9 +50,26 @@ install:
 # This also checks that the software is installed.
   - '%make% -v'
   - '%MSYS_BIN%\msgunfmt.exe -V'
+  - '%MSYS_BIN%\xgettext.exe -V'
   - '%MSYS_BIN%\strip.exe -V'
   - '%PYTHON_EXE% -V'
   - '"c:\Program Files (x86)\NSIS\makensis.exe" /version'
+  - ps: |
+      $searchDirs = @(
+        "$env:MSYS_BIN\..\.."
+        'C:\msys64'
+      )
+      foreach ($dir in $searchDirs) {
+        if (Test-Path $dir) {
+          Write-Output "Searching recursively in: $dir"
+          Get-ChildItem -Path $dir -Recurse -Filter "gtkbuilder.its" -ErrorAction SilentlyContinue | ForEach-Object {
+            Write-Output "FOUND: $($_.FullName)"
+          }
+        } else {
+          Write-Output "Directory not found: $dir"
+        }
+      }
+
 
 build_script:
   - ps: $env:REV8 = $env:APPVEYOR_REPO_COMMIT.Substring(0,8)
@@ -61,6 +78,7 @@ build_script:
   - 'set PATH=%MSYS_BIN%;%PATH%'
   - 'echo %PATH%'
   - '%make% PYTHON=%PYTHON_EXE% -C po local bleachbit.pot'
+
   - '%PYTHON_EXE% -m windows.setup'
   - 'move windows\BleachBit*.exe .'
   - 'move windows\BleachBit*.zip .'
