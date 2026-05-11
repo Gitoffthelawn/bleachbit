@@ -18,6 +18,7 @@ po/cleanerml.pot
 po/desktop.pot
 po/diff.pot
 po/metainfo.pot
+po/nsis.pot
 locale/
 
 # Windows build
@@ -29,6 +30,10 @@ upx/
 windows/vcpkg_installed/
 windows/BleachBit*.exe
 windows/BleachBit*.zip
+windows/NsisInclude/FilesToInstall.nsh
+windows/NsisInclude/FilesToUninstall.nsh
+windows/NsisInclude/LocaleToInstall.nsh
+windows/NsisInclude/LocaleToUninstall.nsh
 
 # editor backups and temporary files
 *~

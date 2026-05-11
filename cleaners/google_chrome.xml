@@ -27,6 +27,15 @@ later.  See the COPYING file in the top-level directory.
     <value os="linux">~/.var/app/com.google.Chrome/config/google-chrome/Default</value>
     <value os="linux">~/.var/app/com.google.ChromeDev/config/google-chrome/Default</value>
   </var>
+  <option id="ai">
+    <label>AI</label>
+    <description>Delete AI models and related data</description>
+    <action command="delete" search="walk.all" path="$$base$$/OnDeviceHeadSuggestModel"/>
+    <action command="delete" search="walk.all" path="$$base$$/OptGuideOnDeviceModel"/>
+    <action command="delete" search="walk.all" path="$$profile$$/OptGuideOnDeviceModel"/>
+    <action command="delete" search="walk.all" path="$$base$$/OptGuideOnDeviceClassifierModel"/>
+    <action command="delete" search="walk.all" path="$$profile$$/OptGuideOnDeviceClassifierModel"/>
+  </option>
   <option id="cache">
     <label>Cache</label>
     <description>Delete the web cache, which reduces time to display revisited pages</description>

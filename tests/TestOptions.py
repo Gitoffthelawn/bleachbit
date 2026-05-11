@@ -24,6 +24,8 @@ Test case for module Options
 
 import errno
 import os
+import stat
+import subprocess
 from unittest import mock
 
 from tests import common
@@ -446,3 +448,47 @@ check_online_updates=True
 
             mock_flush.assert_called_once_with(force=False)
             mock_unregister.assert_called_once()
+
+    def test_unicode_paths(self):
+        """Test that paths with various Unicode characters"""
+        # On Linux, os.listdir() may return filenames with surrogate-escaped
+        # bytes (e.g. invalid UTF-8 byte sequences decoded with
+        # 'surrogateescape').  These contain unpaired surrogates (U+D800 to
+        # U+DFFF) which cannot be encoded as UTF-8, causing UnicodeEncodeError
+        # when ConfigParser writes the .ini file.
+        # https://github.com/bleachbit/bleachbit/issues/2082
+
+        test_cases = [
+            ('surrogate', '/tmp/invalid_unicode_surrogate_\udce9'),
+            ('cjk', '/tmp/中文日本語한국어'),
+            ('european', '/tmp/àéïöüñçß'),
+            ('cyrillic', '/tmp/кодирование'),
+            ('arabic', '/tmp/العربية'),
+            ('emoji', '/tmp/🎉🚀💻'),
+            ('mixed', '/tmp/mixed_中文_àéï_\udce9'),
+        ]
+
+        def verify_paths(o, keep_list, custom_list):
+            """Helper to verify whitelist and custom paths"""
+            o.set_whitelist_paths(keep_list)
+            o.commit()
+            self.assertEqual(keep_list, o.get_whitelist_paths())
+
+            o.set_custom_paths(custom_list)
+            o.commit()
+            self.assertEqual(custom_list, o.get_custom_paths())
+
+            # Verify round-trip: new instance reads from disk
+            o2 = bleachbit.Options.Options()
+            self.assertEqual(keep_list, o2.get_whitelist_paths())
+            self.assertEqual(custom_list, o2.get_custom_paths())
+            o2.close()
+
+        o = bleachbit.Options.options
+        for name, path in test_cases:
+            with self.subTest(unicode_type=name):
+                keep_list = [('file', path)]
+                custom_list = [('folder', path)]
+                verify_paths(o, keep_list, custom_list)
+
+        o.close()

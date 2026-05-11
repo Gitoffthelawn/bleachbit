@@ -428,16 +428,16 @@ class WinappTestCase(common.BleachbitTestCase):
             self.assertExists(rf'{dirname}\deleteme.bak', msg)
             self.assertExists(rf'{dirname}\sub\deleteme.log', msg)
             # set environment variable for testing
-            os.environ['bbtestdir'] = dirname
-            self.assertExists(r'$bbtestdir\deleteme.log', msg)
-            # delete files
-            cleaner = self.ini2cleaner(test[0] % {'d': dirname})
-            self.run_all(cleaner, True)
-            # test
-            self.assertCondExists(test[1], rf'{dirname}\deleteme.log', msg)
-            self.assertCondExists(test[2], rf'{dirname}\deleteme.bak', msg)
-            self.assertCondExists(
-                test[3], rf'{dirname}\sub\deleteme.log', msg)
+            with common.set_temporary_env('bbtestdir', dirname):
+                self.assertExists(r'$bbtestdir\deleteme.log', msg)
+                # delete files
+                cleaner = self.ini2cleaner(test[0] % {'d': dirname})
+                self.run_all(cleaner, True)
+                # test
+                self.assertCondExists(test[1], rf'{dirname}\deleteme.log', msg)
+                self.assertCondExists(test[2], rf'{dirname}\deleteme.bak', msg)
+                self.assertCondExists(
+                    test[3], rf'{dirname}\sub\deleteme.log', msg)
 
             # cleanup
             shutil.rmtree(dirname, True)

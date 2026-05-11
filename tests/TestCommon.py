@@ -1,21 +1,8 @@
-# vim: ts=4:sw=4:expandtab
-
-# BleachBit
-# Copyright (C) 2008-2025 Andrew Ziem
-# https://www.bleachbit.org
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2008-2026 Andrew Ziem.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# This work is licensed under the terms of the GNU GPL, version 3 or
+# later.  See the COPYING file in the top-level directory.
 
 
 """
@@ -143,6 +130,38 @@ class CommonTestCase(common.BleachbitTestCase):
                 title, str, f"All titles should be strings, got {type(title)}")
             self.assertGreater(len(title.strip()), 0,
                                f"Window title should not be empty or whitespace-only: '{title}'")
+
+    def test_mock_missing_package(self):
+        """Test mock_missing_package context manager"""
+        # Inside the context, importing logging should raise an errorl.
+        with common.mock_missing_package('logging', clear_prefixes=('bleachbit.CLI',)):
+            with self.assertRaises(ImportError):
+                import logging  # pylint: disable=import-outside-toplevel
+            with self.assertRaises(ImportError):
+                import bleachbit.CLI  # pylint: disable=import-outside-toplevel
+            # Importing sys should be unaffected.
+            import sys  # pylint: disable=import-outside-toplevel
+        # Outside the context, importing should work.
+        import logging  # pylint: disable=import-outside-toplevel
+        import bleachbit.CLI  # pylint: disable=import-outside-toplevel
+
+    def test_set_temporary_env(self):
+        """Test set_temporary_env context manager"""
+        # Test with an environment variable that was not set before.
+        self.assertIsNone(os.environ.get('TEST_VAR_NEW'))
+        with common.set_temporary_env('TEST_VAR_NEW', 'test_value'):
+            self.assertEqual('test_value', os.environ.get('TEST_VAR_NEW'))
+        # Outside the context, the environment variable should be unset.
+        self.assertIsNone(os.environ.get('TEST_VAR_NEW'))
+
+        # Test with an environment variable that was set before.
+        os.environ['TEST_VAR_EXISTING'] = 'original_value'
+        with common.set_temporary_env('TEST_VAR_EXISTING', 'override_value'):
+            self.assertEqual('override_value',
+                             os.environ.get('TEST_VAR_EXISTING'))
+        # Outside the context, the environment variable should be restored.
+        self.assertEqual('original_value', os.environ.get('TEST_VAR_EXISTING'))
+        del os.environ['TEST_VAR_EXISTING']
 
     def test_touch_file(self):
         """Unit test for touch_file"""

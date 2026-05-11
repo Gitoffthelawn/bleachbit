@@ -19,7 +19,9 @@ from bleachbit.Constant import EMPTY_SPACE_WARNING
 from bleachbit.Language import get_text as _
 from bleachbit.FileUtilities import children_in_directory
 from bleachbit.Options import options
+from bleachbit.Process import is_process_running
 from bleachbit import Action, CleanerML, Command, FileUtilities, Memory, Special
+from bleachbit import IS_POSIX
 from bleachbit.GtkShim import Gtk, Gdk, HAVE_GTK
 from bleachbit.Wipe import wipe_path
 
@@ -137,7 +139,7 @@ class Cleaner:
         logger = logging.getLogger(__name__)
         for (test, pathname, same_user) in self.running:
             if 'exe' == test:
-                if _is_process_running(pathname, same_user):
+                if is_process_running(pathname, same_user):
                     logger.debug("process '%s' is running", pathname)
                     return True
             elif 'pathname' == test:
@@ -417,21 +419,22 @@ class System(Cleaner):
                 '$windir\\security\\logs\\*.old',
                 '$windir\\SoftwareDistribution\\*.log',
                 '$windir\\SoftwareDistribution\\DataStore\\Logs\\*',
-                '$windir\\system32\\TZLog.log',
-                '$windir\\system32\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.bak',
-                '$windir\\system32\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.txt',
-                '$windir\\system32\\LogFiles\\AIT\\AitEventLog.etl.???',
-                '$windir\\system32\\LogFiles\\Firewall\\pfirewall.log*',
-                '$windir\\system32\\LogFiles\\Scm\\SCM.EVM*',
-                '$windir\\system32\\LogFiles\\WMI\\Terminal*.etl',
-                '$windir\\system32\\LogFiles\\WMI\\RTBackup\\EtwRT.*etl',
-                '$windir\\system32\\wbem\\Logs\\*.lo_',
-                '$windir\\system32\\wbem\\Logs\\*.log', )
+                '%WindowsSystem%\\TZLog.log',
+                '%WindowsSystem%\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.bak',
+                '%WindowsSystem%\\config\\systemprofile\\Application Data\\Microsoft\\Internet Explorer\\brndlog.txt',
+                '%WindowsSystem%\\LogFiles\\AIT\\AitEventLog.etl.???',
+                '%WindowsSystem%\\LogFiles\\Firewall\\pfirewall.log*',
+                '%WindowsSystem%\\LogFiles\\Scm\\SCM.EVM*',
+                '%WindowsSystem%\\LogFiles\\WMI\\Terminal*.etl',
+                '%WindowsSystem%\\LogFiles\\WMI\\RTBackup\\EtwRT.*etl',
+                '%WindowsSystem%\\wbem\\Logs\\*.lo_',
+                '%WindowsSystem%\\wbem\\Logs\\*.log', )
 
             for path in paths:
-                expanded = os.path.expandvars(path)
-                for globbed in glob.iglob(expanded):
-                    yield Command.Delete(globbed)
+                for expanded in Windows.expand_windows_system_vars(path):
+                    expanded = os.path.expandvars(expanded)
+                    for globbed in glob.iglob(expanded):
+                        yield Command.Delete(globbed)
 
         # memory
         if sys.platform == 'linux' and 'memory' == option_id:
@@ -509,27 +512,9 @@ class System(Cleaner):
                         yield Command.Delete(filename)
 
         # trash
-        if 'posix' == os.name and 'trash' == option_id:
-            dirname = os.path.expanduser("~/.Trash")
-            for filename in children_in_directory(dirname, False):
-                yield Command.Delete(filename)
-            # fixme http://www.ramendik.ru/docs/trashspec.html
-            # http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
-            # ~/.local/share/Trash
-            # * GNOME 2.22, Fedora 9
-            # * KDE 4.1.3, Ubuntu 8.10
-            dirname = os.path.expanduser("~/.local/share/Trash/files")
-            for filename in children_in_directory(dirname, True):
-                yield Command.Delete(filename)
-            dirname = os.path.expanduser("~/.local/share/Trash/info")
-            for filename in children_in_directory(dirname, True):
-                yield Command.Delete(filename)
-            dirname = os.path.expanduser("~/.local/share/Trash/expunged")
-            # desrt@irc.gimpnet.org tells me that the trash
-            # backend puts files in here temporary, but in some situations
-            # the files are stuck.
-            for filename in children_in_directory(dirname, True):
-                yield Command.Delete(filename)
+        if IS_POSIX and 'trash' == option_id:
+            for p in Unix.get_trash_paths():
+                yield p
 
         # clipboard
         if HAVE_GTK and 'clipboard' == option_id:
@@ -664,14 +649,6 @@ class System(Cleaner):
             if regex.match(pathname) is not None:
                 return True
         return False
-
-
-def _is_process_running(exename, require_same_user):
-    if 'posix' == os.name:
-        return Unix.is_process_running(exename, require_same_user)
-    if 'nt' == os.name:
-        return Windows.is_process_running(exename, require_same_user)
-    raise NotImplementedError('_is_process_running: Unsupported platform')
 
 
 def register_cleaners(cb_progress=lambda x: None, cb_done=lambda: None):

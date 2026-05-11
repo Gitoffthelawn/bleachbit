@@ -89,6 +89,19 @@ def _get_home_dirs_to_anonymize():
             pass
         home_dirs.append(real_home_dir)
 
+    if os.name == 'nt':
+        # Windows may return short (8.3) paths for environment variables
+        # like TMP when the username contains Unicode characters.
+        # Include the short path form of the home directory to ensure
+        # anonymization covers both long and short path forms.
+        try:
+            import win32api
+            short_home_dir = win32api.GetShortPathName(home_dir)
+            if short_home_dir and short_home_dir != home_dir:
+                home_dirs.append(short_home_dir)
+        except (ImportError, OSError, ValueError):
+            pass
+
     # Filter out root directories and duplicates
     filtered_dirs = []
     for d in home_dirs:
@@ -160,6 +173,10 @@ def get_version(four_parts=False):
     return f'{bleachbit.APP_VERSION}.{build_number}'
 
 
+def _escape_invalid_unicode(value):
+    return str(value).encode('utf-8', errors='backslashreplace').decode('utf-8')
+
+
 def get_system_information():
     """Return system information as a string."""
     info = OrderedDict()
@@ -227,4 +244,6 @@ def get_system_information():
     info['__file__'] = __file__
 
     # Render the information as a string
-    return '\n'.join(f'{key} = {value}' for key, value in info.items())
+    return '\n'.join(
+        f'{key} = {_escape_invalid_unicode(value)}'
+        for key, value in info.items())

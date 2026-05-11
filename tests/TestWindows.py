@@ -59,9 +59,9 @@ from bleachbit.Windows import (
     get_font_conf_file,
     get_known_folder_path,
     get_recycle_bin,
+    get_windows_system_paths,
     get_windows_version,
     is_junction,
-    is_process_running,
     move_to_recycle_bin,
     parse_windows_build,
     path_on_network,
@@ -73,9 +73,72 @@ from bleachbit.Windows import (
     get_sid_token_48,
     is_ots_elevation,
     get_splash_screen_delay_seconds,
+    expand_windows_system_vars,
     SplashThread,
 )
 from bleachbit import logger
+
+
+class WindowsSystemPathsTestCase(common.BleachbitTestCase):
+    """Test Windows system directory expansion."""
+
+    def test_get_windows_system_paths_32_bit_os(self):
+        """Unit test get_windows_system_paths() for 32-bit Windows."""
+        env = {
+            'WinDir': r'C:\Windows',
+            'PROCESSOR_ARCHITECTURE': 'x86',
+        }
+        self.assertEqual(
+            [r'C:\Windows\System32'],
+            get_windows_system_paths(env, process_bits=32))
+
+    def test_get_windows_system_paths_64_bit_process(self):
+        """Unit test get_windows_system_paths() for 64-bit Python."""
+        env = {
+            'WinDir': r'C:\Windows',
+            'PROCESSOR_ARCHITECTURE': 'AMD64',
+        }
+        self.assertEqual(
+            [r'C:\Windows\System32', r'C:\Windows\SysWOW64'],
+            get_windows_system_paths(env, process_bits=64))
+
+    def test_get_windows_system_paths_wow64_process(self):
+        """Unit test get_windows_system_paths() for 32-bit Python on 64-bit Windows."""
+        env = {
+            'WinDir': r'C:\Windows',
+            'PROCESSOR_ARCHITECTURE': 'x86',
+            'PROCESSOR_ARCHITEW6432': 'AMD64',
+        }
+        self.assertEqual(
+            [r'C:\Windows\Sysnative', r'C:\Windows\SysWOW64'],
+            get_windows_system_paths(env, process_bits=32))
+
+    def test_get_windows_system_paths(self):
+        """Test get_windows_system_paths() in general"""
+        # Test with default environment
+        ret = get_windows_system_paths()
+        self.assertIsInstance(ret, list)
+        for path in ret:
+            self.assertTrue(os.path.isabs(path))
+            self.assertExists(path)
+
+    def test_expand_windows_system_vars(self):
+        """Unit test expand_windows_system_vars()."""
+        path_arg = (r'%WindowsSystem%\LogFiles\*.log')
+        # Without providing system paths
+        paths = expand_windows_system_vars(path_arg)
+        self.assertIsInstance(paths, list)
+        # On 32-bit OS, it returns one. On 64-bit OS, it returns
+        # 2 (regardless of bitness of the process).
+        self.assertIn(len(paths), (1, 2))
+        # Provide system paths
+        paths = expand_windows_system_vars(
+            path_arg,
+            [r'C:\Windows\Sysnative', r'C:\Windows\SysWOW64'])
+        self.assertEqual(
+            [r'C:\Windows\Sysnative\LogFiles\*.log',
+             r'C:\Windows\SysWOW64\LogFiles\*.log'],
+            paths)
 
 
 if 'win32' == sys.platform:
@@ -320,6 +383,73 @@ class WindowsTestCase(common.BleachbitTestCase, WindowsLinksMixIn):
                         'delete_locked_file() threw an error, which may be a false positive')
             self.assertExists(pathname)
         logger.info('reboot Windows and check the three files are deleted')
+
+    def test_delete_parent_lock_needed(self):
+        old_admin = Windows._delete_parent_lock_admin
+        try:
+            with mock.patch('bleachbit.Windows.shell.IsUserAnAdmin', return_value=False):
+                Windows._delete_parent_lock_admin = None
+                self.assertFalse(Windows._delete_parent_lock_needed(
+                    r'C:\Windows\Temp\bleachbit-test-file'))
+
+            with mock.patch('bleachbit.Windows.shell.IsUserAnAdmin', return_value=True):
+                Windows._delete_parent_lock_admin = None
+                with mock.patch.dict(os.environ, {'USERPROFILE': r'C:\Users\bleachbit'}):
+                    self.assertFalse(Windows._delete_parent_lock_needed(
+                        r'C:\Users\bleachbit\AppData\Local\Temp\bleachbit-test-file'))
+                    self.assertTrue(Windows._delete_parent_lock_needed(
+                        r'C:\Windows\Temp\bleachbit-test-file'))
+        finally:
+            Windows._delete_parent_lock_admin = old_admin
+
+    def test_delete_with_parent_lock_reuses_handle(self):
+        Windows._delete_parent_lock_handle = None
+        Windows._delete_parent_lock_key = None
+        handle = mock.sentinel.handle
+        delete_func = mock.Mock(return_value=mock.sentinel.deleted)
+        with mock.patch('bleachbit.Windows._delete_parent_lock_needed', return_value=True), \
+                mock.patch('bleachbit.Windows._delete_parent_directory', return_value=r'\\?\C:\Windows\Temp'), \
+                mock.patch('bleachbit.Windows.win32file.CreateFile', return_value=handle) as create_file, \
+                mock.patch('bleachbit.Windows.win32file.GetFileAttributesW', return_value=0), \
+                mock.patch('bleachbit.Windows.win32file.CloseHandle') as close_handle:
+            self.assertEqual(Windows.with_parent_lock(
+                r'C:\Windows\Temp\one.tmp', delete_func, r'C:\Windows\Temp\one.tmp'), mock.sentinel.deleted)
+            self.assertEqual(Windows.with_parent_lock(
+                r'C:\Windows\Temp\two.tmp', delete_func, r'C:\Windows\Temp\two.tmp'), mock.sentinel.deleted)
+            self.assertEqual(create_file.call_count, 1)
+            self.assertEqual(delete_func.call_count, 2)
+            Windows._close_delete_parent_lock()
+            close_handle.assert_called_once_with(handle)
+
+    def test_delete_with_parent_lock_closes_handle_on_delete_error(self):
+        Windows._delete_parent_lock_handle = None
+        Windows._delete_parent_lock_key = None
+        handle = mock.sentinel.handle
+        delete_func = mock.Mock(side_effect=RuntimeError('delete failed'))
+        with mock.patch('bleachbit.Windows._delete_parent_lock_needed', return_value=True), \
+                mock.patch('bleachbit.Windows._delete_parent_directory', return_value=r'\\?\C:\Windows\Temp'), \
+                mock.patch('bleachbit.Windows.win32file.CreateFile', return_value=handle), \
+                mock.patch('bleachbit.Windows.win32file.GetFileAttributesW', return_value=0), \
+                mock.patch('bleachbit.Windows.win32file.CloseHandle') as close_handle:
+            with self.assertRaises(RuntimeError):
+                Windows.with_parent_lock(
+                    r'C:\Windows\Temp\one.tmp', delete_func, r'C:\Windows\Temp\one.tmp')
+            close_handle.assert_called_once_with(handle)
+            self.assertIsNone(Windows._delete_parent_lock_handle)
+
+    def test_lock_delete_parent_rejects_reparse_point(self):
+        Windows._delete_parent_lock_handle = None
+        Windows._delete_parent_lock_key = None
+        handle = mock.sentinel.handle
+        with mock.patch('bleachbit.Windows._delete_parent_directory', return_value=r'\\?\C:\Windows\Temp'), \
+                mock.patch('bleachbit.Windows.win32file.CreateFile', return_value=handle), \
+                mock.patch('bleachbit.Windows.win32file.GetFileAttributesW',
+                           return_value=Windows.FILE_ATTRIBUTE_REPARSE_POINT), \
+                mock.patch('bleachbit.Windows.win32file.CloseHandle') as close_handle:
+            with self.assertRaises(OSError):
+                Windows._lock_delete_parent(r'C:\Windows\Temp\one.tmp')
+            close_handle.assert_called_once_with(handle)
+            self.assertIsNone(Windows._delete_parent_lock_handle)
 
     def test_delete_registry_key(self):
         """Unit test for delete_registry_key"""
@@ -841,27 +971,6 @@ class WindowsTestCase(common.BleachbitTestCase, WindowsLinksMixIn):
         else:
             logger.warning(
                 'You should also run test_file_wipe() with admin privileges.')
-
-    def test_is_process_running(self):
-        # winlogon.exe runs on Windows XP and Windows 7
-        # explorer.exe did not run Appveyor, but it does as of 2025-01-25.
-        # svchost.exe runs both as system and current user on Windows 11
-        # svchost.exe does not run as same user on AppVeyor and Windows Server 2012.
-        tests = ((True, 'winlogon.exe', False),
-                 (True, 'WinLogOn.exe', False),
-                 (False, 'doesnotexist.exe', False),
-                 (True, 'explorer.exe', True),
-                 (True, 'svchost.exe', False),
-                 (True, 'services.exe', False),
-                 (False, 'services.exe', True),
-                 (True, 'wininit.exe', False),
-                 (False, 'wininit.exe', True))
-
-        for expected, exename, require_same_user in tests:
-            with self.subTest(exename=exename, require_same_user=require_same_user):
-                result = is_process_running(exename, require_same_user)
-                self.assertEqual(
-                    expected, result, f'Expecting is_process_running({exename}, {require_same_user}) = {expected}, got {result}')
 
     def test_setup_environment(self):
         """Unit test for setup_environment"""

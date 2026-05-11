@@ -89,15 +89,12 @@ class ProtectedPathTestCase(common.BleachbitTestCase):
         self.assertEqual(result, expected)
 
         # Test environment variable expansion
-        os.environ['TEST_PROTECTED_PATH_VAR'] = '/test/path'
-        try:
+        with common.set_temporary_env('TEST_PROTECTED_PATH_VAR', '/test/path'):
             if os.name == 'nt':
                 result = _expand_path('%TEST_PROTECTED_PATH_VAR%')
             else:
                 result = _expand_path('$TEST_PROTECTED_PATH_VAR')
-            self.assertEqual(result, os.path.normpath('/test/path'))
-        finally:
-            del os.environ['TEST_PROTECTED_PATH_VAR']
+        self.assertEqual(result, os.path.normpath('/test/path'))
 
     def test_normalize_for_comparison(self):
         """Test _normalize_for_comparison function"""
@@ -143,13 +140,10 @@ class ProtectedPathTestCase(common.BleachbitTestCase):
     def test_expand_path_entries_split_os_pathsep(self):
         """Environment variables with os.pathsep values expand into multiple entries"""
 
-        original_value = os.environ.get('XDG_DATA_DIRS')
         share1 = f"/nonexistent_xdg_share1_{self._testMethodName}"
         share2 = f"/nonexistent_xdg_share2_{self._testMethodName}"
         expected_paths = [os.path.normpath(share1), os.path.normpath(share2)]
-        try:
-            os.environ['XDG_DATA_DIRS'] = os.pathsep.join(expected_paths)
-
+        with common.set_temporary_env('XDG_DATA_DIRS', os.pathsep.join(expected_paths)):
             clear_cache()
             paths = load_protected_paths(force_reload=True)
             matches = [pp['path']
@@ -159,12 +153,7 @@ class ProtectedPathTestCase(common.BleachbitTestCase):
             for candidate in expected_paths:
                 result = check_protected_path(candidate)
                 self.assertIsNotNone(result)
-        finally:
-            if original_value is None:
-                os.environ.pop('XDG_DATA_DIRS', None)
-            else:
-                os.environ['XDG_DATA_DIRS'] = original_value
-            clear_cache()
+        clear_cache()
 
     @requirePPXML
     def test_load_protected_paths_caching(self):

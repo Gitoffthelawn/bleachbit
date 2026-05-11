@@ -298,24 +298,25 @@ class ExternalCommandTestCase(common.BleachbitTestCase):
     def setUpClass(cls):
         """Set up the test case"""
         cls.old_language = common.get_env('LANGUAGE')
-        common.put_env('LANGUAGE', 'en')
+        cls._lang_env = common.set_temporary_env('LANGUAGE', 'en')
+        cls._lang_env.__enter__()
         super(ExternalCommandTestCase, ExternalCommandTestCase).setUpClass()
-        cls.environment_changed = False
+        cls._test_options_env = None
         # This should not be needed because of using CLI arg --no-delete-confirmation.
         options.set('delete_confirmation', False)
         options.commit()
         if 'BLEACHBIT_TEST_OPTIONS_DIR' not in os.environ:
             # Set environment variable for child process.
-            common.put_env('BLEACHBIT_TEST_OPTIONS_DIR', cls.tempdir)
-            cls.environment_changed = True
+            cls._test_options_env = common.set_temporary_env(
+                'BLEACHBIT_TEST_OPTIONS_DIR', cls.tempdir)
+            cls._test_options_env.__enter__()
 
     @classmethod
     def tearDownClass(cls):
         """Tear down the test case"""
-        common.put_env('LANGUAGE', cls.old_language)
-        if cls.environment_changed:
-            # We don't want to affect other tests, executed after this one.
-            common.put_env('BLEACHBIT_TEST_OPTIONS_DIR', None)
+        if cls._test_options_env:
+            cls._test_options_env.__exit__(None, None, None)
+        cls._lang_env.__exit__(None, None, None)
         super(ExternalCommandTestCase, ExternalCommandTestCase).tearDownClass()
 
     def assertRunning(self, expect_running=True, check_window_title=True, timeout=START_TIMEOUT_SECONDS):
@@ -512,7 +513,8 @@ class ExternalCommandTestCase(common.BleachbitTestCase):
                     os.path.join(py_dir, 'coverage.exe'),
                     'run',
                     '--include=bleachbit/*',
-                    'tests/TestAll.py',
+                    '-m',
+                    'tests.TestAll',
                 ]
              ),
             # D-Bus session bus.

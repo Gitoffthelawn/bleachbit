@@ -73,6 +73,32 @@ def _remove_windows_readonly(path):
     return False
 
 
+def _delete_path(path, delete_func):
+    """
+    Delete a path with parent lock if on Windows.
+    """
+    if os.name == 'nt':
+        return bleachbit.Windows.with_parent_lock(path, delete_func, path)
+    return delete_func(path)
+
+
+def _run_with_delete_lock(path, func):
+    """Run a function with a lock on the parent directory of pathname.
+
+    This prevents race conditions where the parent directory is deleted
+    while the function is running.
+    """
+    if os.name == 'nt':
+        return bleachbit.Windows.with_parent_lock(path, func)
+    return func()
+
+
+def close_delete_parent_lock():
+    """Close the delete parent lock if on Windows."""
+    if os.name == 'nt':
+        bleachbit.Windows._close_delete_parent_lock()
+
+
 def open_files_linux():
     """Return iterator of open files on Linux"""
     return glob.iglob("/proc/*/fd/*")
@@ -384,7 +410,7 @@ def _truncate_locked_file(path):
         return False
 
 
-def delete_file(path, shred):
+def _delete_file_impl(path, shred):
     """"Delete a file
 
     - File must exist.
@@ -437,6 +463,11 @@ def delete_file(path, shred):
     return True
 
 
+def delete_file(path, shred):
+    return _run_with_delete_lock(
+        path, lambda: _delete_file_impl(path, shred))
+
+
 def delete(path, shred=False, ignore_missing=False, allow_shred=True):
     """Delete path that is either file, directory, link or FIFO.
 
@@ -466,7 +497,7 @@ def delete(path, shred=False, ignore_missing=False, allow_shred=True):
         mode = os.lstat(path)[stat.ST_MODE]
         is_special = stat.S_ISFIFO(mode) or stat.S_ISLNK(mode)
     if is_special:
-        os.remove(path)
+        _delete_path(path, os.remove)
         return True
     if os.path.isdir(path):
         delpath = path
@@ -480,7 +511,7 @@ def delete(path, shred=False, ignore_missing=False, allow_shred=True):
                 return False
             delpath = wipe_name(path)
         try:
-            os.rmdir(delpath)
+            _delete_path(delpath, os.rmdir)
         except OSError as e:
             # [Errno 39] Directory not empty
             # https://bugs.launchpad.net/bleachbit/+bug/1012930
@@ -498,7 +529,7 @@ def delete(path, shred=False, ignore_missing=False, allow_shred=True):
             elif os.name == 'nt' and errno.EACCES == e.errno:
                 # On Windows, read-only directories cause Access Denied
                 if _remove_windows_readonly(delpath):
-                    os.rmdir(delpath)
+                    _delete_path(delpath, os.rmdir)
                 else:
                     raise
             else:
@@ -518,7 +549,7 @@ def delete(path, shred=False, ignore_missing=False, allow_shred=True):
         delete_file(path, do_shred)
         return True
     elif os.path.islink(path):
-        os.remove(path)
+        _delete_path(path, os.remove)
         return True
     else:
         # TRANSLATORS: Log message where %s is the pathname.
@@ -902,7 +933,7 @@ def uris_to_paths(file_uris):
     return file_paths
 
 
-def whitelisted_posix(path, check_realpath=True):
+def whitelisted_posix(path, check_realpath=True, _followed_link=False):
     """Check whether this POSIX path is whitelisted"""
     from bleachbit.Options import options
     if check_realpath and os.path.islink(path):
@@ -910,20 +941,29 @@ def whitelisted_posix(path, check_realpath=True):
         if whitelisted_posix(path, False):
             return True
         # resolve symlink
-        path = os.path.realpath(path)
-    for pathname in options.get_whitelist_paths():
-        if pathname[0] == 'file' and path == pathname[1]:
-            return True
-        if pathname[0] == 'folder':
-            if path == pathname[1]:
+        return whitelisted_posix(os.path.realpath(path), False, _followed_link=True)
+    for (keep_type, keep_path) in options.get_whitelist_paths():
+        if keep_type == 'file':
+            if path == keep_path:
                 return True
-            if path.startswith(pathname[1] + os.sep):
+            if _followed_link and path == os.path.realpath(keep_path):
                 return True
+        if keep_type == 'folder':
+            if path == keep_path:
+                return True
+            if path.startswith(keep_path + os.sep):
+                return True
+            if _followed_link:
+                real_pathname = os.path.realpath(keep_path)
+                if path == real_pathname or path.startswith(real_pathname + os.sep):
+                    return True
     return False
 
 
 def whitelisted_windows(path):
     """Check whether this Windows path is whitelisted"""
+    if not isinstance(path, str):
+        raise TypeError(f"Expected str, got {type(path)}")
     from bleachbit.Options import options
     for pathname in options.get_whitelist_paths():
         # Windows is case insensitive

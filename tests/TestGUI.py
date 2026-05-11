@@ -41,8 +41,8 @@ class GUITestCase(common.BleachbitTestCase):
     """Test case for module GUI"""
     @classmethod
     def setUpClass(cls):
-        cls.old_language = common.get_env('LANGUAGE')
-        common.put_env('LANGUAGE', 'en')
+        cls._lang_env = common.set_temporary_env('LANGUAGE', 'en')
+        cls._lang_env.__enter__()
         # reminder: the set up in the parent class creates a clean
         # configuration file.
         super(GUITestCase, GUITestCase).setUpClass()
@@ -63,7 +63,7 @@ class GUITestCase(common.BleachbitTestCase):
     def tearDownClass(cls):
         super(GUITestCase, GUITestCase).tearDownClass()
         options.get_tree = cls.options_get_tree
-        common.put_env('LANGUAGE', cls.old_language)
+        cls._lang_env.__exit__(None, None, None)
 
     @classmethod
     def refresh_gui(cls, delay=0):

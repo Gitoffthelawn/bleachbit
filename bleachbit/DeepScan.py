@@ -30,8 +30,9 @@ import re
 import time
 import unicodedata
 from collections import namedtuple
-from bleachbit import fs_scan_re_flags
+from bleachbit import FS_SCAN_RE_FLAGS
 from . import Command
+from .FileUtilities import whitelisted
 
 
 def normalized_walk(top, **kwargs):
@@ -67,7 +68,7 @@ class CompiledSearch:
         self.command = search.command
 
         def re_compile(regex):
-            return re.compile(regex, fs_scan_re_flags) if regex else None
+            return re.compile(regex, FS_SCAN_RE_FLAGS) if regex else None
 
         self.regex = re_compile(search.regex)
         self.nregex = re_compile(search.nregex)
@@ -107,8 +108,19 @@ class DeepScan:
         yield_time = time.time()
 
         for (top, searches) in self.searches.items():
+            # This skips top-level directories that are in the keep list
+            # to reduce unnecessary work.
+            if whitelisted(top):
+                continue
             compiled_searches = [CompiledSearch(s) for s in searches]
-            for (dirpath, _dirnames, filenames) in normalized_walk(top):
+            for (dirpath, dirnames, filenames) in normalized_walk(top):
+                # This filters out subdirectories that are in the keep list
+                # to reduce unnecessary work.
+                dirnames[:] = [
+                    dirname
+                    for dirname in dirnames
+                    if not whitelisted(os.path.join(dirpath, dirname))
+                ]
                 for c in compiled_searches:
                     # fixme, don't match filename twice
                     for filename in filenames:

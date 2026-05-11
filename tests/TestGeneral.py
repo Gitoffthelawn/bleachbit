@@ -1,22 +1,8 @@
-# vim: ts=4:sw=4:expandtab
-
-# BleachBit
-# Copyright (C) 2008-2025 Andrew Ziem
-# https://www.bleachbit.org
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (c) 2008-2026 Andrew Ziem.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+# This work is licensed under the terms of the GNU GPL, version 3 or
+# later.  See the COPYING file in the top-level directory.
 
 """
 Test case for module General
@@ -113,20 +99,11 @@ class GeneralTestCase(common.BleachbitTestCase):
             self.assertEqual(uid, int(sudo_uid_env))
 
         # Test with empty LOGNAME (if not in sudo mode)
-        original_logname = os.getenv('LOGNAME')
         if not sudo_mode():
-            try:
-                if 'LOGNAME' in os.environ:
-                    del os.environ['LOGNAME']
+            with common.set_temporary_env('LOGNAME', None):
                 uid_no_logname = get_real_uid()
                 self.assertIsInstance(uid_no_logname, int)
                 self.assertTrue(0 <= uid_no_logname <= 65535)
-            finally:
-                # Restore original environment
-                if original_logname is not None:
-                    os.environ['LOGNAME'] = original_logname
-                elif 'LOGNAME' in os.environ:
-                    del os.environ['LOGNAME']
 
         # Debug logging for troubleshooting
         logger.debug("os.getenv('LOGNAME') = %s", os.getenv('LOGNAME'))
@@ -385,38 +362,27 @@ class GeneralTestCase(common.BleachbitTestCase):
 
         # With parent environment set to English and parameter clean_env=False,
         # expect English
+        with common.set_temporary_env('LC_ALL', 'C'):
+            (rc, _, stderr) = run_external(
+                ['ls', '/doesnotexist'], clean_env=False)
+            self.assertEqual(rc, 2)
+            self.assertIn('No such file', stderr)
 
-        old_environ = copy.deepcopy(os.environ)
+            # Set parent environment to Spanish.
+            with common.set_temporary_env('LC_ALL', 'es_MX.UTF-8'):
+                (rc, _, stderr) = run_external(
+                    ['ls', '/doesnotexist'], clean_env=False)
+                self.assertEqual(rc, 2)
+                if os.path.exists('/usr/share/locale-langpack/es/LC_MESSAGES/coreutils.mo'):
+                    # Spanish language pack is installed.
+                    self.assertIn('No existe el archivo', stderr)
 
-        lc_all_old = common.get_env('LC_ALL')
-        lang_old = common.get_env('LANG')
-        common.put_env('LC_ALL', 'C')
-        (rc, _, stderr) = run_external(
-            ['ls', '/doesnotexist'], clean_env=False)
-        self.assertEqual(rc, 2)
-        self.assertIn('No such file', stderr)
-
-        # Set parent environment to Spanish.
-        common.put_env('LC_ALL', 'es_MX.UTF-8')
-        (rc, _, stderr) = run_external(
-            ['ls', '/doesnotexist'], clean_env=False)
-        self.assertEqual(rc, 2)
-        if os.path.exists('/usr/share/locale-langpack/es/LC_MESSAGES/coreutils.mo'):
-            # Spanish language pack is installed.
-            self.assertIn('No existe el archivo', stderr)
-
-        # Here the parent environment has Spanish, but the child process
-        # should use English.
-        (rc, _, stderr) = run_external(
-            ['ls', '/doesnotexist'], clean_env=True)
-        self.assertEqual(rc, 2)
-        self.assertIn('No such file', stderr)
-
-        # Reset environment
-        self.assertNotEqual(old_environ, copy.deepcopy(os.environ))
-        common.put_env('LC_ALL', lc_all_old)
-        common.put_env('LANG', lang_old)
-        self.assertEqual(old_environ, copy.deepcopy(os.environ))
+                # Here the parent environment has Spanish, but the child process
+                # should use English.
+                (rc, _, stderr) = run_external(
+                    ['ls', '/doesnotexist'], clean_env=True)
+                self.assertEqual(rc, 2)
+                self.assertIn('No such file', stderr)
 
     def test_run_external_invalid(self):
         """Unit test for run_external() with invalid arguments"""

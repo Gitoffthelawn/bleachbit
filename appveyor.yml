@@ -37,13 +37,15 @@ install:
   - # The Visual Studio 2013 image had msys, but Visual Studio 2022 image does not.
   #- ps: '& "$env:APPVEYOR_BUILD_FOLDER\windows\msys-install.ps1"'
   - ps: '& "$env:APPVEYOR_BUILD_FOLDER\windows\python-gtk3-install.ps1"'
-  # UPX 4.0.2, 4.1.0, and 4.2.3 cause ModuleNotFoundError during build
-  # UPX 4.0.1 works
-  - ps: if (-not (Test-Path upx.zip)) { Start-FileDownload "https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-win64.zip" -FileName upx.zip}
-  - ps: Get-FileHash upx.zip
+  - ps: if (-not (Test-Path upx.zip)) { Start-FileDownload "https://github.com/upx/upx/releases/download/v5.1.1/upx-5.1.1-win64.zip" -FileName upx.zip}
+  - ps: $hash = (Get-FileHash upx.zip -Algorithm SHA256).Hash; if ($hash -ne 'fa5380bca4c2718547aaa0134bc0d8a7fa27e102f0ac6371573d60d1c21d64de') { throw "SHA256 mismatch=$hash" }
   - '%SZ_EXE% x upx.zip'
-  - 'rename upx-4.0.1-win64 upx'
+  - 'rename upx-5.1.1-win64 upx'
   - 'dir .\upx\'
+  # Update NSIS from 3.03 to 3.12.
+  - ps: if (-not (Test-Path nsis-3.12-setup.exe)) { Start-FileDownload "https://sourceforge.net/projects/nsis/files/NSIS%203/3.12/nsis-3.12-setup.exe/download" -FileName nsis-3.12-setup.exe }
+  - ps: $hash = (Get-FileHash nsis-3.12-setup.exe -Algorithm SHA256).Hash; if ($hash -ne '3bc2b06253a7e4957111be152ac6a536e0c7478a706e19da814038db5d706495') { throw "SHA256 mismatch=$hash" }
+  - 'nsis-3.12-setup.exe /S'
 # Show version numbers of installed software.
 # This also checks that the software is installed.
   - '%make% -v'
@@ -55,7 +57,7 @@ install:
 build_script:
   - ps: $env:REV8 = $env:APPVEYOR_REPO_COMMIT.Substring(0,8)
   - 'echo revision = "%REV8%" > bleachbit\Revision.py'
-  - 'echo build_number = "%APPVEYOR_BUILD_NUMBER%" > bleachbit\Revision.py'
+  - 'echo build_number = "%APPVEYOR_BUILD_NUMBER%" >> bleachbit\Revision.py'
   - 'set PATH=%MSYS_BIN%;%PATH%'
   - 'echo %PATH%'
   - '%make% PYTHON=%PYTHON_EXE% -C po local bleachbit.pot'
@@ -75,7 +77,7 @@ test_script:
   - 'SET DESTRUCTIVE_TESTS=T'
 # Catch warnings as errors. Also set in `tests/common.py`.
   - 'SET PYTHONWARNINGS=error'
-  - '%PYTHON_HOME%\Scripts\coverage.exe run --include="bleachbit/*" tests/TestAll.py'
+  - '%PYTHON_EXE% -m coverage run --include="bleachbit/*" -m tests.TestAll'
   - '%PYTHON_HOME%\Scripts\coverage.exe report'
 
 

@@ -233,6 +233,23 @@ class ActionTestCase(common.BleachbitTestCase):
             actual = expand_multi_var(input_str, variables)
             self.assertSequenceEqual(actual, expected)
 
+    def test_windows_system_var(self):
+        """Unit test for expanding %WindowsSystem% in action paths."""
+        action_xml = (
+            r'<action command="delete" search="file" '
+            r'path="%WindowsSystem%\foo.log"/>'
+        )
+        action_node = parseString(action_xml).childNodes[0]
+        expanded = [r'C:\Windows\Sysnative\foo.log',
+                    r'C:\Windows\SysWOW64\foo.log']
+        with mock.patch('bleachbit.Action.os.name', 'nt'), \
+                mock.patch('bleachbit.Action.Windows', create=True) as mock_windows:
+            mock_windows.expand_windows_system_vars.return_value = expanded
+            action = Delete(action_node)
+        self.assertEqual(expanded, action.paths)
+        mock_windows.expand_windows_system_vars.assert_called_once_with(
+            r'%WindowsSystem%\foo.log')
+
     def test_has_glob(self):
         """Unit test for function has_glob()"""
         tests = ((r'c:\windows\*.log', True),
@@ -288,6 +305,20 @@ class ActionTestCase(common.BleachbitTestCase):
             for wait in ('true', 't', 'false', 'f', 'no', 'n'):
                 for test in tests:
                     self._test_action_str(test.format(cmd=cmd_qa, wait=wait))
+
+    def test_process_with_space(self):
+        """Test process action with space in command"""
+        # This is a regression test for a bug where spaces in commands were not handled correctly
+        delete_me = self.write_file('delete me.txt')
+        if os.name == 'nt':
+            cmd = f'cmd /c del "{delete_me}"'
+        else:
+            delete_me_escaped = delete_me.replace(" ", "\\ ")
+            cmd = f'rm {delete_me_escaped}'
+        cmd_qa = quoteattr(cmd)
+        action_str = f'<action command="process" cmd={cmd_qa} wait="true" />'
+        self._test_action_str(action_str)
+        self.assertNotExists(delete_me)
 
     def test_process_space(self):
         """Unit test for process action with space in path
