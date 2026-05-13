@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: bleachbit\n"
 "Report-Msgid-Bugs-To: andrew@bleachbit.org\n"
 "POT-Creation-Date: 2026-05-11 08:56-0600\n"
-"PO-Revision-Date: 2026-05-13 14:20+0000\n"
+"PO-Revision-Date: 2026-05-14 15:11+0000\n"
 "Last-Translator: ovl-1 <ovl-002@mailinator.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "bleachbit/main/nb_NO/>\n"
@@ -2419,6 +2419,8 @@ msgid ""
 "Delete confirmation is disabled but expert mode is not enabled. Enable "
 "Expert Mode in preferences to skip delete confirmations."
 msgstr ""
+"Slettebekreftelse er deaktivert, men ekspertmodus er ikke aktivert. Aktiver "
+"ekspertmodus i innstillingene for å hoppe over slettebekreftelser."
 
 #. TRANSLATORS: First-start hint for Linux users shown in
 #. the log on the main screen.
