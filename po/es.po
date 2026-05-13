@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: bleachbit\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: andrew@bleachbit.org\n"
 "POT-Creation-Date: 2026-05-11 08:56-0600\n"
-"PO-Revision-Date: 2026-04-28 15:09+0000\n"
-"Last-Translator: Francisco Serrador <fserrador@gmail.com>\n"
+"PO-Revision-Date: 2026-05-13 14:20+0000\n"
+"Last-Translator: keko sanjuan <edukeko@outlook.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/bleachbit/main/"
 "es/>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.5.dev0\n"
 "X-Launchpad-Export-Date: 2021-12-14 04:36+0000\n"
 
 #: ../cleaners/realplayer.xml ../cleaners/windows_media_player.xml
@@ -2630,7 +2630,7 @@ msgstr "Previsualizar"
 #. 'Clean' is a verb.
 #: ../bleachbit/GuiWindow.py
 msgid "Clean"
-msgstr "Vaciar"
+msgstr "Limpiar"
 
 #. TRANSLATORS: Button in tree view's context menu to open the cookie
 #. manager.
